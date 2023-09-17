@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ec4sx)w86(1sssl5q$9k)06d6emq_)66vwpzm^xtrv8+#f57k)'
+SECRET_KEY = 'django-insecure-*9t_mdza&0ffjgroh!!&iwn&*_m+rs6bo8f+^w(*p=n1y$!cj+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'carrosselApp.apps.CarrosselappConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -75,10 +77,15 @@ WSGI_APPLICATION = 'MySliderC.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'DB_APPDADOS',
+        'USER': 'postgres',
+        'PASSWORD': 'Viero22*',
+        'HOST': 'LOCALHOST',
+        'PORT': '5401',
     }
 }
+
 
 
 # Password validation
