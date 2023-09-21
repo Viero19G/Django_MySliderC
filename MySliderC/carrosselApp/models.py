@@ -6,7 +6,7 @@ from distutils.command.upload import upload
 # sqlite.
 
 
-class Carousel(models.Model):
+class Conteudo(models.Model):
     image = models.ImageField(upload_to='pics/%y/%m/%d/')
     title = models.CharField(max_length=150)
     sub_title = models.CharField(max_length=200)
@@ -16,15 +16,15 @@ class Carousel(models.Model):
     def __str__(self):
         return "{} ({}) ".format(self.title, self.image)
 
-class Tela(models.Model):
-    carrossel = models.ForeignKey(Carousel, on_delete=models.PROTECT)
+class Grade(models.Model):
+    conteudo = models.ForeignKey(Conteudo, on_delete=models.PROTECT)
     title = models.CharField(max_length=150)
     sub_title = models.CharField(max_length=200)
     def __str__(self):
         return self.title
 
 class Setor(models.Model):
-    tela = models.ForeignKey(Tela, on_delete=models.CASCADE)
+    tela = models.ForeignKey(Grade, on_delete=models.CASCADE)
     nome=models.CharField(max_length=180)
     def __str__(self):
         return self.nome
