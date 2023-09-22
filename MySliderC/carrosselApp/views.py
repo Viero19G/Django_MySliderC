@@ -20,4 +20,3 @@ def create_view(request):
         form.save()
          
     context['form']= form
-    return render(request, "create_perfil.html", context)
