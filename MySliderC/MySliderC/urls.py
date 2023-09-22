@@ -19,7 +19,9 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from carrosselApp.views import PerfilForm, Perfil, create_view 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('carrosselApp.urls')),
+    path('cadastros', include('paginas.urls')),
 ]
