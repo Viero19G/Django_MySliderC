@@ -1,10 +1,14 @@
-from django.shortcuts import render
+from django.views.generic import TemplateView
  
 # relative import of forms
 from .models import Perfil
 from .forms import PerfilForm
  
  
+class IndexView(TemplateView):
+    template_name = "index.html"
+
+
 def create_view(request):
     # dictionary for initial data with
     # field names as keys
