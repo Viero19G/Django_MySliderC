@@ -23,5 +23,5 @@ from carrosselApp.views import PerfilForm, Perfil, create_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('carrosselApp.urls')),
-    path('cadastros', include('paginas.urls')),
+    path('cadastros/', include('paginas.urls')),
 ]
