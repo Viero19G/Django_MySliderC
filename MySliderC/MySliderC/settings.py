@@ -41,8 +41,13 @@ INSTALLED_APPS = [
     'carrosselApp.apps.CarrosselappConfig',
     'paginas.apps.PaginasConfig',
     'cadastros.apps.CadastrosConfig',
+    'crispy_forms',
 
 ]
+
+#crispy form
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
