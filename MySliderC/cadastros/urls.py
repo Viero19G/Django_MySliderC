@@ -1,6 +1,6 @@
 from django.urls import path
 ### importando views para create
-from cadastros.views.views import * 
+from cadastros.views.createviews import * 
 ### importando views de update
 from cadastros.views.upviews import *
 ### importando views de delete
