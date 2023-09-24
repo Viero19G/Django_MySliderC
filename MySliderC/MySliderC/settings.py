@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'carrosselApp.apps.CarrosselappConfig',
     'paginas.apps.PaginasConfig',
     'cadastros.apps.CadastrosConfig',
+    'usuarios.apps.UsuariosConfig',
     'crispy_forms',
     "crispy_bootstrap5",
 
@@ -142,3 +143,8 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+### configurações de autenticação
+LOGIN_REDIRECT_URL = 'inicio'
+LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = 'login'

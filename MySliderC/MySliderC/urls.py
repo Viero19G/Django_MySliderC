@@ -25,4 +25,5 @@ urlpatterns = [
     path('', include('carrosselApp.urls')),
     path('paginas/', include('paginas.urls')),
     path('cadastros/', include('cadastros.urls')),
+    path('usuarios/', include('usuarios.urls')),
 ]
