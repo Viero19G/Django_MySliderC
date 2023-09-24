@@ -3,6 +3,9 @@ from django.urls import path
 from .views import *
 ### importando views de update
 from .upviews import *
+### importando views de delete
+from .deleteviews import *
+
 
 
 
@@ -24,4 +27,13 @@ urlpatterns = [
     path('editar/usuario/<int:pk>/', UsuarioUpdate.as_view(), name='upUsuario'),
     path('editar/perfil-usuario/<int:pk>/', Perfil_UsuarioUpdate.as_view(), name='upUsuarioPerfil'),
     path('editar/conteudo/<int:pk>/', ConteudoUpdate.as_view(), name='upConteudo'),
+
+ #### urls para delete ####
+
+    path('excluir/setor/<int:pk>/', SetorDelete.as_view(), name='delSetor'),
+    path('excluir/grade/<int:pk>/', GradeDelete.as_view(), name='delGrade'),
+    path('excluir/perfil/<int:pk>/', PerfilDelete.as_view(), name='delPerfil'),
+    path('excluir/usuario/<int:pk>/', UsuarioDelete.as_view(), name='delUsuario'),
+    path('excluir/perfil-usuario/<int:pk>/', Perfil_UsuarioDelete.as_view(), name='delUsuarioPerfil'),
+    path('excluir/conteudo/<int:pk>/', ConteudoDelete.as_view(), name='delConteudo'),
 ]
