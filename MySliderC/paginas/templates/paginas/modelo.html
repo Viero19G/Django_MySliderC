@@ -12,27 +12,49 @@
   
 
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   
 </head>
 
 <body>
     {% block menu %}
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="{%url 'inicio'%}">Inicio</a>
+    <nav class="navbar navbar-expand-lg bg-secondary">
+        <div class="container-fluid bg-body-tertiary">
+          <a class="navbar-brand bg-body-tertiary" href="{%url 'inicio'%}">
+            <img src="{% static 'imgs/logo.png' %}"alt="Logo" style="width: 50px; height: auto;">
+          </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="{%url 'grade'%}">Menu</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Carrossel</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Link 2</a>
+          
+              <!-- navegando para creates -->
+              <li class="nav-item dropdown"> 
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">     Cadastros
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{%url 'cadastrar-perfil'%}">Perfil</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{%url 'cadastrar-usuario'%}">Usuário</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{%url 'cadastrar-setor'%}">Setor</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{%url 'cadastrar-grade'%}">Grade</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{%url 'cadastrar-conteudo'%}">Conteúdo</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{%url 'cadastrar-perfil-usuario'%}">Perfil para o Usuario</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                </ul>
               </li>
+      <!--  -->
               <li class="nav-item">
                 <a class="nav-link disabled" aria-disabled="true">LINK-off</a>
               </li>
@@ -45,7 +67,7 @@
 
     {% block destaque %}
     <div class="bg-secondary">
-        Figuras de destaque
+       
     </div>
     {% endblock %}
 
@@ -64,12 +86,19 @@
 
     
     {% block rodape %}
-    <div class="bg-light">
-        Rodapé
+
+    </div>
+    <div class="footer border-success fixed-bottom bg-primary p-3 bg-secondary">
+      
+      <p>  <img src="{% static 'imgs/logo.png' %}"alt="Logo" style="width: 120px; height: auto;">
+      </p>
+    </div>
+  </div>
     </div>
     {% endblock %}
     <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 </body>
 
 </html>

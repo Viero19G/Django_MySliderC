@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'carrosselApp.apps.CarrosselappConfig',
     'paginas.apps.PaginasConfig',
+    'cadastros.apps.CadastrosConfig',
 
 ]
 
