@@ -22,10 +22,15 @@
             <td>{{ usuario.usrNome }}</td>
             <td>{{ usuario.usrMail }}</td>
             <td>{{ usuario.setor.nome }}</td>
-            <td> 
-                <a href="{% url 'upUsuario' usuario.pk %}" class="btn btn-warning btn-sm" title="editar">editar</a>
-                <a href="{% url 'delUsuario' usuario.pk %}" class="btn btn-danger btn-sm"  title="excluir">excluir</a>
-            </td>
+            <td>
+                <a href="{% url 'upUsuario' usuario.pk %}" class="btn btn-warning btn-sm" title="Editar">
+                    <i class="fas fa-pencil-alt"></i> <!-- Ícone de lápis -->
+                </a>
+                <a href="{% url 'delUsuario' usuario.pk %}" class="btn btn-danger btn-sm" title="Excluir">
+                    <i class="fas fa-trash"></i> <!-- Ícone de lixeira -->
+                </a>
+            </td><td> 
+           
 
         </tr>
         {% empty %}

@@ -22,11 +22,12 @@
             <td>{{ usrPerfil.usuario.usrNome }}</td>
             <td>{{ usrPerfil.perfil.perfilNome }}</td>
             <td>{{ usrPerfil.descricao }}</td>
-            <td> 
-                <a href="{% url 'upUsuarioPerfil' usrPerfil.pk %}" class="btn btn-warning btn-sm" title="editar">editar</a>
-                <a href="{% url 'delUsuarioPerfil' usrPerfil.pk %}" class="btn btn-danger btn-sm"  title="excluir">excluir</a>
+            <td>
+                <a href="{% url 'upUsuarioPerfil' usrPerfil.pk %}" class="btn btn-warning btn-sm" title="editar"> <i
+                        class="fas fa-pencil-alt"></i> <!-- Ícone de lápis --></a>
+                <a href="{% url 'delUsuarioPerfil' usrPerfil.pk %}" class="btn btn-danger btn-sm"
+                    title="excluir">   <i class="fas fa-trash"></i> <!-- Ícone de lixeira --></a>
             </td>
-
         </tr>
         {% empty %}
         <tr>

@@ -5,7 +5,7 @@
 {% block conteudo %}
 <h3>Lista de Conteúdos Registrados</h3>
 
-    <a href="{% url 'cadastrar-conteudo' %}" class="btn btn-primary btn-sm">Adicionar Novo</a>
+<a href="{% url 'cadastrar-conteudo' %}" class="btn btn-primary btn-sm">Adicionar Novo</a>
 <hr>
 <div class="table-responsive">
     <table class="table table-striped">
@@ -26,9 +26,11 @@
             <td>{{ conteudo.descricao }}</td>
             <td>{{ conteudo.tempo }}</td>
             <td>{{ conteudo.image }}</td>
-            <td> 
-                <a href="{% url 'upConteudo' conteudo.pk %}" class="btn btn-warning btn-sm" title="editar">editar</a>
-                <a href="{% url 'delConteudo' conteudo.pk %}" class="btn btn-danger btn-sm"  title="excluir">excluir</a>
+            <td>
+                <a href="{% url 'upConteudo' conteudo.pk %}" class="btn btn-warning btn-sm" title="editar"> <i
+                        class="fas fa-pencil-alt"></i> <!-- Ícone de lápis --></a></a>
+                <a href="{% url 'delConteudo' conteudo.pk %}" class="btn btn-danger btn-sm" title="excluir"><i
+                        class="fas fa-trash"></i> <!-- Ícone de lixeira --></a></a>
             </td>
 
         </tr>
