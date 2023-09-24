@@ -1,0 +1,42 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+
+
+{% block conteudo %}
+<h3>Lista de Grades Registradas</h3>
+
+<hr>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <tr>
+            <th>Título</th>
+            <th>Sub Título</th>
+            <th>Conteúdo</th>
+            <th>opções</th>
+        </tr>
+
+        <!-- percorrer lista de objetos -->
+        {% for grade in object_list %}
+        <tr>
+            <td>{{ grade.title }}</td>
+            <td>{{ grade.sub_title }}</td>
+            <td>
+                {% for conteudo in grade.conteudo.all %}
+                    {{ conteudo.title }}
+                    {% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+            <td> 
+                <a href="{% url 'upGrade' grade.pk %}" class="btn btn-warning btn-sm" title="editar">editar</a>
+                <a href="{% url 'delGrade' grade.pk %}" class="btn btn-danger btn-sm"  title="excluir">excluir</a>
+            </td>
+
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">Nenhuma grade registrada</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

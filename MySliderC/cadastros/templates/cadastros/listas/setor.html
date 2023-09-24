@@ -1,0 +1,35 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+
+
+{% block conteudo %}
+<h3>Lista de Setores Registrados</h3>
+
+<hr>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <tr>
+            <th>Nome</th>
+            <th>Grade do Setor</th>
+            <th>opções</th>
+        </tr>
+
+        <!-- percorrer lista de objetos -->
+        {% for setor in object_list %}
+        <tr>
+            <td>{{ setor.nome }}</td>
+            <td>{{ setor.grade.title }}</td>
+            <td> 
+                <a href="{% url 'upSetor' setor.pk %}" class="btn btn-warning btn-sm" title="editar">editar</a>
+                <a href="{% url 'delSetor' setor.pk %}" class="btn btn-danger btn-sm"  title="excluir">excluir</a>
+            </td>
+
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">Nenhum setor registrado</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

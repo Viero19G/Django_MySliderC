@@ -1,0 +1,35 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+
+
+{% block conteudo %}
+<h3>Lista de Perfis Registrados</h3>
+
+<hr>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <tr>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>opções</th>
+        </tr>
+
+        <!-- percorrer lista de objetos -->
+        {% for perfil in object_list %}
+        <tr>
+            <td>{{ perfil.perfilNome }}</td>
+            <td>{{ perfil.descricao }}</td>
+            <td> 
+                <a href="{% url 'upPerfil' perfil.pk %}" class="btn btn-warning btn-sm" title="editar">editar</a>
+                <a href="{% url 'delPerfil' perfil.pk %}" class="btn btn-danger btn-sm"  title="excluir">excluir</a>
+            </td>
+
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">Nenhum Perfil registrado</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

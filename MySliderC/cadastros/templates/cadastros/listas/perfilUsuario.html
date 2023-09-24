@@ -1,0 +1,37 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+
+
+{% block conteudo %}
+<h3>Lista de Permissões Registradas</h3>
+
+<hr>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <tr>
+            <th>Nome</th>
+            <th>Perfil</th>
+            <th>Descrição do Acesso</th>
+            <th>opções</th>
+        </tr>
+
+        <!-- percorrer lista de objetos -->
+        {% for usrPerfil in object_list %}
+        <tr>
+            <td>{{ usrPerfil.usuario.usrNome }}</td>
+            <td>{{ usrPerfil.perfil.perfilNome }}</td>
+            <td>{{ usrPerfil.descricao }}</td>
+            <td> 
+                <a href="{% url 'upUsuarioPerfil' usrPerfil.pk %}" class="btn btn-warning btn-sm" title="editar">editar</a>
+                <a href="{% url 'delUsuarioPerfil' usrPerfil.pk %}" class="btn btn-danger btn-sm"  title="excluir">excluir</a>
+            </td>
+
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">Nenhuma permissão registrada</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

@@ -1,10 +1,12 @@
 from django.urls import path
 ### importando views para create
-from .views import *
+from cadastros.views.views import * 
 ### importando views de update
-from .upviews import *
+from cadastros.views.upviews import *
 ### importando views de delete
-from .deleteviews import *
+from cadastros.views.deleteviews import *
+### Importando view para listar
+from cadastros.views.listviews import *
 
 
 
@@ -36,4 +38,12 @@ urlpatterns = [
     path('excluir/usuario/<int:pk>/', UsuarioDelete.as_view(), name='delUsuario'),
     path('excluir/perfil-usuario/<int:pk>/', Perfil_UsuarioDelete.as_view(), name='delUsuarioPerfil'),
     path('excluir/conteudo/<int:pk>/', ConteudoDelete.as_view(), name='delConteudo'),
+ 
+ #### Urls para List ####
+    path('listar/setor/', SetorList.as_view(), name='listSetor'),
+    path('listar/grade/', GradeList.as_view(), name='listGrade'),
+    path('listar/perfil/', PerfilList.as_view(), name='listPerfil'),
+    path('listar/usuario/', UsuarioList.as_view(), name='listUsuario'),
+    path('listar/perfil-usuario/', Perfil_UsuarioList.as_view(), name='listUsuarioPerfil'),
+    path('listar/conteudo/', ConteudoList.as_view(), name='listConteudo'),
 ]

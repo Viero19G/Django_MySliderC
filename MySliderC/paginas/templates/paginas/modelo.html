@@ -12,7 +12,6 @@
   
   
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
    
 </head>
 
@@ -55,6 +54,26 @@
                 </ul>
               </li>
       <!--  -->
+                <!-- navegando para Listas -->
+                <li class="nav-item dropdown"> 
+                  <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">     Listar
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{%url 'listPerfil'%}">Perfil</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{%url 'listUsuario'%}">Usuário</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{%url 'listSetor'%}">Setor</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{%url 'listGrade'%}">Grade</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{%url 'listConteudo'%}">Conteúdo</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{%url 'listUsuarioPerfil'%}">Acessos</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                  </ul>
+                </li>
+        <!--  -->
               <li class="nav-item">
                 <a class="nav-link disabled" aria-disabled="true">LINK-off</a>
               </li>
