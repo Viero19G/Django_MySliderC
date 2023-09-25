@@ -4,122 +4,171 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% block titulo %}
-    <title>Modelo</title>
-    {% endblock %}
-  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% block titulo %}
+  <title>Modelo</title>
+  {% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-   
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
 </head>
 
 <body>
-    {% block menu %}
-    <nav class="navbar navbar-expand-lg bg-secondary">
-        <div class="container-fluid bg-body-tertiary">
-          <a class="navbar-brand bg-body-tertiary" href="{%url 'inicio'%}">
-            <img src="{% static 'imgs/logo.png' %}"alt="Logo" style="width: 50px; height: auto;">
-          </a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{%url 'grade'%}">Menu</a>
+  {% block menu %}
+  <nav class="navbar navbar-expand-lg navbar-light bg-secondary">
+    <div class="container-fluid bg-body-tertiary">
+      <a class="navbar-brand bg-body-tertiary" href="{%url 'inicio'%}">
+        <img src="{% static 'imgs/logo.png' %}" alt="Logo" style="width: 20px; height: auto;">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="container col-md-4 ml-auto" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{%url 'grade'%}">Menu</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Carrossel</a>
+          </li>
+
+          <!-- navegando para creates -->
+          {% if request.user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Cadastros
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{%url 'cadastrar-perfil'%}">Perfil</a></li>
+              <li>
+                <hr class="dropdown-divider">
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Carrossel</a>
+              <li><a class="dropdown-item" href="{%url 'cadastrar-usuario'%}">Usuário</a></li>
+              <li>
+                <hr class="dropdown-divider">
               </li>
-          
-              <!-- navegando para creates -->
-              <li class="nav-item dropdown"> 
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">     Cadastros
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="{%url 'cadastrar-perfil'%}">Perfil</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="{%url 'cadastrar-usuario'%}">Usuário</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="{%url 'cadastrar-setor'%}">Setor</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="{%url 'cadastrar-grade'%}">Grade</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="{%url 'cadastrar-conteudo'%}">Conteúdo</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="{%url 'cadastrar-perfil-usuario'%}">Perfil para o Usuario</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                </ul>
+              <li><a class="dropdown-item" href="{%url 'cadastrar-setor'%}">Setor</a></li>
+              <li>
+                <hr class="dropdown-divider">
               </li>
-      <!--  -->
-                <!-- navegando para Listas -->
-                <li class="nav-item dropdown"> 
-                  <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">     Listar
-                  </a>
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{%url 'listPerfil'%}">Perfil</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="{%url 'listUsuario'%}">Usuário</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="{%url 'listSetor'%}">Setor</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="{%url 'listGrade'%}">Grade</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="{%url 'listConteudo'%}">Conteúdo</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="{%url 'listUsuarioPerfil'%}">Acessos</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                  </ul>
-                </li>
-        <!--  -->
-              <li class="nav-item">
-                <a class="nav-link disabled" aria-disabled="true">LINK-off</a>
+              <li><a class="dropdown-item" href="{%url 'cadastrar-grade'%}">Grade</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{%url 'cadastrar-conteudo'%}">Conteúdo</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{%url 'cadastrar-perfil-usuario'%}">Perfil para o Usuario</a></li>
+              <li>
+                <hr class="dropdown-divider">
               </li>
             </ul>
-          </div>
-        </div>
-      </nav>
-    {% endblock %}
+          </li>
+          {% endif %}
+          <!--  -->
+          <!-- navegando para Listas -->
+          {% if request.user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Listar
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{%url 'listPerfil'%}">Perfil</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{%url 'listUsuario'%}">Usuário</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{%url 'listSetor'%}">Setor</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{%url 'listGrade'%}">Grade</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{%url 'listConteudo'%}">Conteúdo</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{%url 'listUsuarioPerfil'%}">Acessos</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+            </ul>
+          </li>
+          {% endif %}
+          <!--  -->
 
+          <!-- navegando para Usuario -->
+          <ul class="navbar-nav  ">
+            <!-- Itens de menu do dropdown "Usuários" aqui -->
+            {% if request.user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"> {{ request.user }}
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Meus Dados</a></li>
 
-    {% block destaque %}
-    <div class="bg-secondary">
-       
+                <li><a class="dropdown-item" href="#">Alterar Senha</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="{%url 'logout'%}">Sair</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+              </ul>
+            </li>
+            {% else %}
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{%url 'login'%}">
+                <i  class="bi bi-door-open"></i>
+                Entrar
+              </a>
+            </li>
+          </ul>
+          {% endif%}
+          <!--  -->
+        </ul>
+      </div>
     </div>
-    {% endblock %}
+  </nav>
+  {% endblock %}
 
 
-  
-    <div class="container">
-      {% block conteudo %}
-        <h3>Template de modelo</h3>
-
-
-
-        <p>Conteúdo do site</p>
-        {% endblock %}
-    </div>
-   
-
-    
-    {% block rodape %}
-
-    </div>
-    <div class="footer border-success fixed-bottom bg-primary p-3 bg-secondary">
-      
-      <p>  <img src="{% static 'imgs/logo.png' %}"alt="Logo" style="width: 120px; height: auto;">
-      </p>
-    </div>
+  {% block destaque %}
+  <div class="bg-secondary">
+    <!-- Conteúdo do destaque aqui, se houver -->
   </div>
-    </div>
+  {% endblock %}
+
+  <div class="container">
+    {% block conteudo %}
+    <h3>Template de modelo</h3>
+    <p>Conteúdo do site</p>
     {% endblock %}
-    <script src="{% static 'js/jquery.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+  </div>
+
+
 </body>
+{% block rodape %}
+<footer class="footer">foot
+  <!-- Conteúdo do rodapé aqui -->
+</footer>
+{% endblock %}
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
 
 </html>

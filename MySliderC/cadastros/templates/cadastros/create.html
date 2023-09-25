@@ -4,22 +4,27 @@
 {% load crispy_forms_tags %}
 
 {% block conteudo %}
-<h3>Cadastros</h3>
-<p class="lead">
-    Preencha todos os campos obrigatórios
-</p>
+<div class="row">
+    <div class="col-md-4 mx-auto">
 
-<hr>
+        <h3>Cadastros</h3>
+        <p class="lead">
+            Preencha todos os campos obrigatórios
+        </p>
 
-<form action="" method="post">
+        <hr>
 
-    {% csrf_token %}
+        <form action="" method="post">
 
-    {{ form|crispy }}
+            {% csrf_token %}
 
-    <p class="lead">
-        Para selecionar mais de um item, use <strong> 'Ctrl+clique' </strong>
-    </p>
-    <button type="submit" class="btn btn-primary">Cadastrar</button>
-</form>
+            {{ form|crispy }}
+
+            <p class="lead">
+                Para selecionar mais de um item, use <strong> 'Ctrl+clique' </strong>
+            </p>
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </form>
+    </div>
+</div>
 {% endblock %}
