@@ -4,38 +4,47 @@ from django.urls import reverse_lazy
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-class SetorDelete(LoginRequiredMixin, DeleteView):
+from braces.views import GroupRequiredMixin
+
+class SetorDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
+
     login_url = reverse_lazy('login')
+    group_required = u"admin"
     model = Setor
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listSetor')
 
-class GradeDelete(LoginRequiredMixin, DeleteView):
+class GradeDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
+    group_required = u"admin"
     model = Grade
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listGrade')
 
-class ConteudoDelete(LoginRequiredMixin, DeleteView):
+class ConteudoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
+    group_required = u"admin"
     model = Conteudo
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listConteudo')
 
-class UsuarioDelete(LoginRequiredMixin, DeleteView):
+class UsuarioDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
+    group_required = u"admin"
     model = Usuario
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listUsuario')
 
-class PerfilDelete(LoginRequiredMixin, DeleteView):
+class PerfilDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
+    group_required = u"admin"
     model = Perfil
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listPerfil')
 
-class Perfil_UsuarioDelete(LoginRequiredMixin, DeleteView):
+class Perfil_UsuarioDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
+    group_required = u"admin"
     model = Perfil_Usuario
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listUsuarioPerfil')
