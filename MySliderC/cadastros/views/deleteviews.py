@@ -28,23 +28,23 @@ class ConteudoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listConteudo')
 
-class UsuarioDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
-    login_url = reverse_lazy('login')
-    group_required = u"admin"
-    model = Usuario
-    template_name = 'cadastros/delete.html'
-    success_url = reverse_lazy('listUsuario')
+# class UsuarioDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
+#     login_url = reverse_lazy('login')
+#     group_required = u"admin"
+#     model = Usuario
+#     template_name = 'cadastros/delete.html'
+#     success_url = reverse_lazy('listUsuario')
 
-class PerfilDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
-    login_url = reverse_lazy('login')
-    group_required = u"admin"
-    model = Perfil
-    template_name = 'cadastros/delete.html'
-    success_url = reverse_lazy('listPerfil')
+# class PerfilDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
+#     login_url = reverse_lazy('login')
+#     group_required = u"admin"
+#     model = Perfil
+#     template_name = 'cadastros/delete.html'
+#     success_url = reverse_lazy('listPerfil')
 
-class Perfil_UsuarioDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
-    login_url = reverse_lazy('login')
-    group_required = u"admin"
-    model = Perfil_Usuario
-    template_name = 'cadastros/delete.html'
-    success_url = reverse_lazy('listUsuarioPerfil')
+# class Perfil_UsuarioDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
+#     login_url = reverse_lazy('login')
+#     group_required = u"admin"
+#     model = Perfil_Usuario
+#     template_name = 'cadastros/delete.html'
+#     success_url = reverse_lazy('listUsuarioPerfil')

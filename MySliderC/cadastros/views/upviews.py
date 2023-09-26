@@ -29,25 +29,25 @@ class ConteudoUpdate(GroupRequiredMixin,LoginRequiredMixin, UpdateView):
     template_name = 'cadastros/create.html'
     success_url = reverse_lazy('listConteudo')
 
-class UsuarioUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
-    login_url = reverse_lazy('login')
-    model = Usuario
-    fields = [ 'usrNome','usrSenha', 'usrMail']
-    template_name = 'cadastros/create.html'
-    success_url = reverse_lazy('listUsuario')
+# class UsuarioUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
+#     login_url = reverse_lazy('login')
+#     model = Usuario
+#     fields = [ 'usrNome','usrSenha', 'usrMail']
+#     template_name = 'cadastros/create.html'
+#     success_url = reverse_lazy('listUsuario')
 
-class PerfilUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
-    login_url = reverse_lazy('login')
-    group_required =  u"administrador"
-    model = Perfil
-    fields = [ 'perfilNome','descricao',]
-    template_name = 'cadastros/create.html'
-    success_url = reverse_lazy('listPerfil')
+# class PerfilUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
+#     login_url = reverse_lazy('login')
+#     group_required =  u"administrador"
+#     model = Perfil
+#     fields = [ 'perfilNome','descricao',]
+#     template_name = 'cadastros/create.html'
+#     success_url = reverse_lazy('listPerfil')
 
-class Perfil_UsuarioUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
-    login_url = reverse_lazy('login')
-    group_required =  u"administrador"
-    model = Perfil_Usuario
-    fields = [ 'descricao','usuario','perfil']
-    template_name = 'cadastros/create.html'
-    success_url = reverse_lazy('listUsuarioPerfil')
+# class Perfil_UsuarioUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
+#     login_url = reverse_lazy('login')
+#     group_required =  u"administrador"
+#     model = Perfil_Usuario
+#     fields = [ 'descricao','usuario','perfil']
+#     template_name = 'cadastros/create.html'
+#     success_url = reverse_lazy('listUsuarioPerfil')

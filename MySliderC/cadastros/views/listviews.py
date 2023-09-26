@@ -20,17 +20,17 @@ class ConteudoList(LoginRequiredMixin, ListView):
     model = Conteudo
     template_name = 'cadastros/listas/conteudo.html'
 
-class UsuarioList(LoginRequiredMixin, ListView):
-    login_url = reverse_lazy('login')
-    model = Usuario
-    template_name = 'cadastros/listas/usuario.html'
+# class UsuarioList(LoginRequiredMixin, ListView):
+#     login_url = reverse_lazy('login')
+#     model = Usuario
+#     template_name = 'cadastros/listas/usuario.html'
 
-class PerfilList(LoginRequiredMixin, ListView):
-    login_url = reverse_lazy('login')
-    model = Perfil
-    template_name = 'cadastros/listas/perfil.html'
+# class PerfilList(LoginRequiredMixin, ListView):
+#     login_url = reverse_lazy('login')
+#     model = Perfil
+#     template_name = 'cadastros/listas/perfil.html'
 
-class Perfil_UsuarioList(LoginRequiredMixin, ListView):
-    login_url = reverse_lazy('login')
-    model = Perfil_Usuario
-    template_name = 'cadastros/listas/perfilUsuario.html'
+# class Perfil_UsuarioList(LoginRequiredMixin, ListView):
+#     login_url = reverse_lazy('login')
+#     model = Perfil_Usuario
+#     template_name = 'cadastros/listas/perfilUsuario.html'

@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'MySliderC.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'DB_APPDADOS',
+        'NAME': 'DB_APPDADOS2',
         'USER': 'postgres',
         'PASSWORD': 'Viero22*',
         'HOST': 'LOCALHOST',
