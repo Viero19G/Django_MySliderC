@@ -11,14 +11,14 @@ class SetorCreate(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
 
     model = Setor
-    fields = ['grade', 'nome']
+    fields = ['nome', 'membros']
     template_name = 'cadastros/create.html'
     success_url = reverse_lazy('listSetor')
 
 class GradeCreate(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
     model = Grade
-    fields = [ 'title','sub_title', 'conteudo']
+    fields = [ 'title','sub_title', 'conteudo','usuariosEdit','setor']
     template_name = 'cadastros/create.html'
     success_url = reverse_lazy('listGrade')
 
