@@ -23,24 +23,18 @@ class Conteudo(models.Model):
     def __str__(self):
         return "{} ({})".format(self.title, self.sub_title)
     
-    def form_valid(self, form):
-
-        ## Antes do super não foi criado objeto e nem salvo no banco
-        form.instance.usuario = self.request.user
-
-        url = super().form_valid(form)
-
-        return url
-
+  
 
 
 class Setor(models.Model): 
+    usuario = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Usuário', default=None)
     nome = models.CharField(max_length=180, verbose_name='Nome do SETOR')
     membros = models.ManyToManyField(User, related_name='setores_membros', blank=True, verbose_name='Membros do Setor')
 
     def __str__(self):
-        return "{} ({})".format(self.nome, self.grade.title)
+        return "{} ({})".format(self.nome,self.membros)
     
+ 
 
 class Grade(models.Model):
     setor = models.ManyToManyField(Setor, related_name='grades_editadas', blank=True, verbose_name='Setores Onde Aparecerá')
@@ -53,11 +47,4 @@ class Grade(models.Model):
     def __str__(self):
         return "{} ({})".format(self.title, ', '.join([str(c) for c in self.conteudo.all()]))
     
-    def form_valid(self, form):
-
-        ## Antes do super não foi criado objeto e nem salvo no banco
-        form.instance.usuario = self.request.user
-
-        url = super().form_valid(form)
-
-        return url
+   

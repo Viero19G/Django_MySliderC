@@ -9,21 +9,21 @@ from braces.views import GroupRequiredMixin
 class SetorDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 
     login_url = reverse_lazy('login')
-    group_required = u"admin"
+    group_required = u"admiistrador"
     model = Setor
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listSetor')
 
 class GradeDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
-    group_required = u"admin"
+    group_required = u"administrador"
     model = Grade
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listGrade')
 
 class ConteudoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
-    group_required = u"admin"
+    group_required = u"administrador"
     model = Conteudo
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listConteudo')

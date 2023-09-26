@@ -11,7 +11,7 @@
     <table class="table table-striped">
         <tr>
             <th>Nome</th>
-            <th>Grade do Setor</th>
+            <th>Membros</th>
             <th>opções</th>
         </tr>
 
@@ -19,7 +19,12 @@
         {% for setor in object_list %}
         <tr>
             <td>{{ setor.nome }}</td>
-            <td>{{ setor.grade.title }}</td>
+            <td>
+                {% for membro in setor.membros.all %}
+                {{ membro.username }}
+                {% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </td>
             <td> 
                 <a href="{% url 'upSetor' setor.pk %}" class="btn btn-warning btn-sm" title="editar">
                     <i class="fas fa-pencil-alt"></i> <!-- Ícone de lápis -->
@@ -28,12 +33,10 @@
                     <i class="fas fa-trash"></i> <!-- Ícone de lixeira -->
                 </a>
             </td>
-           
-       
         </tr>
         {% empty %}
         <tr>
-            <td colspan="2">Nenhum setor registrado</td>
+            <td colspan="3">Nenhum setor registrado</td>
         </tr>
         {% endfor %}
     </table>

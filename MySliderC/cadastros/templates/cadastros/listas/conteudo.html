@@ -15,6 +15,7 @@
             <th>Descrição</th>
             <th>Tempo</th>
             <th>Imagem</th>
+            <th>Cadastrado por:</th>
             <th>opções</th>
         </tr>
 
@@ -26,6 +27,7 @@
             <td>{{ conteudo.descricao }}</td>
             <td>{{ conteudo.tempo }}</td>
             <td>{{ conteudo.image }}</td>
+            <td>{{ conteudo.usuario.username }}</td>
             <td>
                 <a href="{% url 'upConteudo' conteudo.pk %}" class="btn btn-warning btn-sm" title="editar"> <i
                         class="fas fa-pencil-alt"></i> <!-- Ícone de lápis --></a></a>
