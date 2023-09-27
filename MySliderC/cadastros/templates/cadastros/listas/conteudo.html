@@ -26,7 +26,7 @@
             <td>{{ conteudo.sub_title }}</td>
             <td>{{ conteudo.descricao }}</td>
             <td>{{ conteudo.tempo }}</td>
-            <td>{{ conteudo.image }}</td>
+            <td><a href="{{ conteudo.image.url }}"><i class="fas fa-eye"></i></a></td>
             <td>{{ conteudo.usuario.username }}</td>
             <td>
                 <a href="{% url 'upConteudo' conteudo.pk %}" class="btn btn-warning btn-sm" title="editar"> <i

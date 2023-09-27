@@ -144,6 +144,11 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+## config para uploads
+### pode se definir um local compartilhado, como um diretório público etc...
+MEDIA_ROOT = os.path.join(BASE_DIR, "pics")
+
+MEDIA_URL = "/pics/"
 ### configurações de autenticação
 LOGIN_REDIRECT_URL = 'inicio'
 LOGOUT_REDIRECT_URL = 'login'

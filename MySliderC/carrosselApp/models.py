@@ -8,7 +8,7 @@ from django.contrib.auth import get_user
 # e py manage.py migrate _ após esses comandos os models são incorporados ao
 # sqlite.
 class Conteudo(models.Model):
-    image = models.ImageField(upload_to='pics/%Y/%m/%d/')
+    image = models.FileField(upload_to='pics/%Y/%m/%d/')
     title = models.CharField(max_length=150, verbose_name='Título')
     sub_title = models.CharField(max_length=200, verbose_name='Sub-Título')
     descricao = models.CharField(max_length=200, verbose_name='Descrição')
