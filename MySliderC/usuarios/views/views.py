@@ -1,10 +1,10 @@
 from django.views.generic.edit import CreateView
 from django.contrib.auth.models import User, Group
-from .forms import UsuarioForm
+from usuarios.forms import UsuarioForm
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 
-from .models import Perfil
+from usuarios.models import Perfil
 
 class UsuarioCreate(CreateView):
     template_name = "cadastros/create.html"
