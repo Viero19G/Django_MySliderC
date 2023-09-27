@@ -42,9 +42,11 @@ INSTALLED_APPS = [
     'paginas.apps.PaginasConfig',
     'cadastros.apps.CadastrosConfig',
     'usuarios.apps.UsuariosConfig',
-    'crispy_forms',
-    "crispy_bootstrap5",
 
+##  instalados com PiP
+    'crispy_forms',
+    'crispy_bootstrap5',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 #crispy form

@@ -4,6 +4,7 @@ from .forms import UsuarioForm
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 
+from .models import Perfil
 
 class UsuarioCreate(CreateView):
     template_name = "cadastros/create.html"
@@ -14,10 +15,12 @@ class UsuarioCreate(CreateView):
 
         grupo = get_object_or_404(Group, name='usuario') # busca grupo
 
-        url = super().form_valid(form)
+        url = super().form_valid(form)  # Cria o objeto
 
         self.object.groups.add(grupo) # pega objeto e define grupo
         self.object.save() # salva objeto com novo grupo antes de retornar
+
+        Perfil.objects.create(usuario=self.object) ## Cria perfil associado ao user criado
 
         return url
 
