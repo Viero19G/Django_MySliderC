@@ -107,37 +107,48 @@
           {% endif %}
           <!--  -->
 
-          <!-- navegando para Usuario -->
-          <ul class="navbar-nav  ">
-            <!-- Itens de menu do dropdown "Usuários" aqui -->
-            {% if request.user.is_authenticated %}
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"> {{ request.user }}
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Meus Dados</a></li>
+        <!-- Navegando para Usuario -->
+<ul class="navbar-nav  ">
+  <!-- Itens de menu do dropdown "Usuários" aqui -->
+  {% if request.user.is_authenticated %}
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"> {{ request.user }}
+    </a>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="#">Meus Dados</a></li>
+      <li><a class="dropdown-item" href="#">Alterar Senha</a></li>
+      <li>
+        <hr class="dropdown-divider">
+      </li>
+      <li><a class="dropdown-item" href="{% url 'logout'%}">Sair</a></li>
+      <li>
+        <hr class="dropdown-divider">
+      </li>
+    </ul>
+  </li>
+  {% else %}
 
-                <li><a class="dropdown-item" href="#">Alterar Senha</a></li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="{%url 'logout'%}">Sair</a></li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-              </ul>
-            </li>
-            {% else %}
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{%url 'login'%}">
-                <i  class="bi bi-door-open"></i>
-                Entrar
-              </a>
-            </li>
-          </ul>
-          {% endif%}
-          <!--  -->
+  <div class="btn-group">
+  
+    <button type="button" class="btn  dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-plus"></i>
+      <span class="visually-hidden">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu">
+      <li> <a href="{% url 'registrar'  %}" class="nav-link">
+        <i class="fas fa-user-plus"></i> <!-- Ícone para Novo Usuário -->
+        Novo Usuário
+      </a></li>
+      <li> <a class="nav-link" href="{%url 'login'%}">
+        <i class="fas fa-sign-in-alt"></i> <!-- Ícone para Entrar -->
+        Entrar
+      </a></li>
+    </ul>
+  </div>
+  {% endif %}
+</ul>
+<!--  -->
         </ul>
       </div>
     </div>
