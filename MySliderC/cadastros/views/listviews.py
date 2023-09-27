@@ -41,7 +41,7 @@ class GradeList(LoginRequiredMixin, ListView):
         admin_group = Group.objects.get(name='administrador')
         marketing_group = Group.objects.get(name='marketing')
 
-        if user.groups.filter(Q(name='admin') | Q(name='marketing')).exists():
+        if user.groups.filter(Q(name='administrador') | Q(name='marketing')).exists():
             # Se o usuário pertencer a qualquer um dos grupos, mostre todas as grades
             queryset = Grade.objects.all()
         else:

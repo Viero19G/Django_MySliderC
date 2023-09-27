@@ -29,10 +29,10 @@ class Conteudo(models.Model):
 class Setor(models.Model): 
     usuario = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Usuário', default=None)
     nome = models.CharField(max_length=180, verbose_name='Nome do SETOR')
-    membros = models.ManyToManyField(User, related_name='setores_membros', blank=True, verbose_name='Membros do Setor')
+    membros = models.ManyToManyField(User, related_name='setores_membros', blank=True, verbose_name='Selecione os Membros do Setor')
 
     def __str__(self):
-        return "{} ({})".format(self.nome,self.membros)
+        return "{} ".format(self.nome)
     
  
 

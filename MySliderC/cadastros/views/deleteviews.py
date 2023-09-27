@@ -14,6 +14,13 @@ class SetorDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listSetor')
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['titulo'] = "Excluindo Setor"
+
+        return context
+
 class GradeDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     group_required = u"administrador"
@@ -21,12 +28,28 @@ class GradeDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listGrade')
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['titulo'] = "Excluindo Grade"
+
+        return context
+
 class ConteudoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     group_required = u"administrador"
     model = Conteudo
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listConteudo')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['titulo'] = "Excluindo Conteúdo"
+
+        return context
+
+
 
 # class UsuarioDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 #     login_url = reverse_lazy('login')

@@ -27,6 +27,12 @@ class SetorCreate(LoginRequiredMixin, CreateView):
         else:
             # Se o usuário não pertencer a nenhum desses grupos, não permita criar o setor
             return self.handle_no_permission()
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['titulo'] = "Cadastro de Setor"
+        context['botao'] = "Cadastrar"
+        return context
 
 class GradeCreate(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
@@ -48,6 +54,12 @@ class GradeCreate(LoginRequiredMixin, CreateView):
         else:
             # Se o usuário não pertencer a nenhum desses grupos, não permita criar a grade
             return self.handle_no_permission()
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['titulo'] = "Cadastro de Grade"
+        context['botao'] = "Cadastrar"
+        return context
 
 class ConteudoCreate(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
@@ -74,6 +86,13 @@ class ConteudoCreate(LoginRequiredMixin, CreateView):
             else:
                 # Se não pertencer ao mesmo setor, não permita criar o conteúdo
                 return self.handle_no_permission()
+            
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['titulo'] = "Cadastro de Conteúdo"
+        context['botao'] = "Cadastrar"
+        return context
     
 
 # class UsuarioCreate(LoginRequiredMixin, CreateView):
