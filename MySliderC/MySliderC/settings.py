@@ -45,8 +45,8 @@ INSTALLED_APPS = [
 
 ##  instalados com PiP
     'crispy_forms',
-    'crispy_bootstrap5',
-    'django_cleanup.apps.CleanupConfig',
+    'crispy_bootstrap5',  
+    'django_cleanup.apps.CleanupConfig', ## editar e limpar arquivos
 ]
 
 #crispy form

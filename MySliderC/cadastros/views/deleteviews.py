@@ -46,7 +46,7 @@ class ConteudoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
         context = super().get_context_data(*args, **kwargs)
 
         context['titulo'] = "Excluindo Conteúdo"
-
+        
         return context
 
 
