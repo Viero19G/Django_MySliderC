@@ -8,39 +8,43 @@
 <a href="{% url 'cadastrar-conteudo' %}" class="btn btn-primary btn-sm">Adicionar Novo</a>
 <hr>
 <div class="table-responsive">
-    <table class="table table-striped">
-        <tr>
-            <th>Título</th>
-            <th>Sub Título</th>
-            <th>Descrição</th>
-            <th>Tempo</th>
-            <th>Imagem</th>
-            <th>Cadastrado por:</th>
-            <th>opções</th>
-        </tr>
-
+    <table class="table table-striped" id="tabela-conteudo">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Sub Título</th>
+                <th>Descrição</th>
+                <th>Tempo</th>
+                <th>Imagem</th>
+                <th>Cadastrado por:</th>
+                <th>opções</th>
+            </tr>
+        </thead>
         <!-- percorrer lista de objetos -->
-        {% for conteudo in object_list %}
-        <tr>
-            <td>{{ conteudo.title }}</td>
-            <td>{{ conteudo.sub_title }}</td>
-            <td>{{ conteudo.descricao }}</td>
-            <td>{{ conteudo.tempo }}</td>
-            <td><a href="{{ conteudo.image.url }}"><i class="fas fa-eye"></i></a></td>
-            <td>{{ conteudo.usuario.username }}</td>
-            <td>
-                <a href="{% url 'upConteudo' conteudo.pk %}" class="btn btn-warning btn-sm" title="editar"> <i
-                        class="fas fa-pencil-alt"></i> <!-- Ícone de lápis --></a></a>
-                <a href="{% url 'delConteudo' conteudo.pk %}" class="btn btn-danger btn-sm" title="excluir"><i
-                        class="fas fa-trash"></i> <!-- Ícone de lixeira --></a></a>
-            </td>
+        <tbody>
+            {% for conteudo in object_list %}
 
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5">Nenhum conteudo registrado</td>
-        </tr>
-        {% endfor %}
+            <tr>
+                <td>{{ conteudo.title }}</td>
+                <td>{{ conteudo.sub_title }}</td>
+                <td>{{ conteudo.descricao }}</td>
+                <td>{{ conteudo.tempo }}</td>
+                <td><a href="{{ conteudo.image.url }}"><i class="fas fa-eye"></i></a></td>
+                <td>{{ conteudo.usuario.username }}</td>
+                <td>
+                    <a href="{% url 'upConteudo' conteudo.pk %}" class="btn btn-warning btn-sm" title="editar"> <i
+                            class="fas fa-pencil-alt"></i> <!-- Ícone de lápis --></a></a>
+                    <a href="{% url 'delConteudo' conteudo.pk %}" class="btn btn-danger btn-sm" title="excluir"><i
+                            class="fas fa-trash"></i> <!-- Ícone de lixeira --></a></a>
+                </td>
+
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Nenhum conteudo registrado</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 </div>
 {% endblock %}
@@ -50,7 +54,9 @@
 <script>
 
     $(document).ready(function () {
-        alert("importação ok!")
+        $('#tabela-conteudo').DataTable({
+            "order": []  // Remova a ordenação padrão se não for necessário
+        });
     });
 
 </script>

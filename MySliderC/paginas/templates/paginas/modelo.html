@@ -11,10 +11,14 @@
   {% endblock %}
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
+<!-- Bootstrap -->
   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+  <!-- CSS na unha -->
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
+  <!-- dataTable -->
+  <link href="{% static 'DataTables/datatables.min.css'%}" rel="stylesheet">
 
 </head>
 
@@ -29,20 +33,21 @@
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="container col-md-4 ml-auto" id="navbarSupportedContent">
+      <div class="container col-md-6 ml-auto" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{%url 'grade'%}">Menu</a>
+            <a class="nav-link active" aria-current="page" href="{%url 'grade'%}"><i
+              class="fas fa-home"></i>Menu</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Carrossel</a>
+            <a class="nav-link" href="#"><i class="fas fa-images"></i>Carrossel</a>
           </li>
 
           <!-- navegando para creates -->
           {% if request.user.is_authenticated %}
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Cadastros
-            </a>
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false"><i class="fas fa-plus"></i> Cadastros</a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#">Perfil</a></li>
               <li>
@@ -75,8 +80,8 @@
           <!-- navegando para Listas -->
           {% if request.user.is_authenticated %}
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Listar
-            </a>
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false"><i class="fas fa-list"></i> Listar</a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#">Perfil</a></li>
               <li>
@@ -112,8 +117,8 @@
   <!-- Itens de menu do dropdown "Usuários" aqui -->
   {% if request.user.is_authenticated %}
   <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"> {{ request.user }}
-    </a>
+    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+    aria-expanded="false"><i class="fas fa-user"></i> {{ request.user }}</a>
     <ul class="dropdown-menu">
       <li><a class="dropdown-item" href="{% url 'upPerfil'%}">Meus Dados</a></li>
       <li><a class="dropdown-item" href="#">Alterar Senha</a></li>
@@ -181,6 +186,8 @@
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 
+ 
+<script src="{% static 'DataTables/datatables.min.js'%}"></script>
 {% block scripts %}
 
 {% endblock %}

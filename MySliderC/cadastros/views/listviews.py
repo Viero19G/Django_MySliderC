@@ -11,7 +11,7 @@ class SetorList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Setor
     template_name = 'cadastros/listas/setor.html'
-    
+    paginate_by = 2
 
     def get_queryset(self):
         user = self.request.user
@@ -65,6 +65,7 @@ class ConteudoList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Conteudo
     template_name = 'cadastros/listas/conteudo.html'
+    
 
     def get_queryset(self):
         user = self.request.user
