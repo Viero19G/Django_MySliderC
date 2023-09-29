@@ -12,6 +12,13 @@ from cadastros.views.listviews import *
 
 
 urlpatterns = [
+    
+   ## Para verGrade
+    path('ver_grade/<int:grade_id>/', GradeList.ver_grade, name='verGrade'),
+    
+   ##  Para verCarrossel 
+    path('ver_Carrossel/<int:grade_id>/', GradeList.ver_carrossel, name='verCarrossel'),
+
     #### urls para create ####
     path('setor/',SetorCreate.as_view(), name='cadastrar-setor'),
     path('grade/',GradeCreate.as_view(), name='cadastrar-grade'),

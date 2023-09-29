@@ -40,6 +40,9 @@
                 <a href="{% url 'delGrade' grade.pk %}" class="btn btn-danger btn-sm" title="Excluir">
                     <i class="fas fa-trash"></i> <!-- Ícone de lixeira -->
                 </a>
+                <a href="{% url 'verGrade' grade.pk %}" class="btn btn-info btn-sm" title="Ver Detalhes">
+                    <i class="fas fa-eye"></i> <!-- Ícone de olho -->
+                </a>
             </td>
         </tr>
         {% empty %}

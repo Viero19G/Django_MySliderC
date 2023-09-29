@@ -31,8 +31,8 @@ class SetorUpdate(LoginRequiredMixin, UpdateView):
 class GradeUpdate(LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
     model = Grade
-    fields = [ 'title','sub_title', 'conteudo']
-    template_name = 'cadastros/create.html'
+    fields = [ 'title','sub_title', 'conteudo','setor']
+    template_name = 'editar/upGrade.html'
     success_url = reverse_lazy('listGrade')
 
     def dispatch(self, request, *args, **kwargs):

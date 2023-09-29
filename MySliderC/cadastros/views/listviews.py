@@ -3,9 +3,10 @@ from carrosselApp.models import *
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User, Group
 from django.db.models import Q
-
+from django.shortcuts import render, get_object_or_404
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 class SetorList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
@@ -59,6 +60,13 @@ class GradeList(LoginRequiredMixin, ListView):
                 queryset = Grade.objects.none()
 
         return queryset
+    
+    def ver_grade(request, grade_id):
+        grade = get_object_or_404(Grade, pk=grade_id)
+        return render(request, 'ver/verGrade.html', {'grade': grade})
+    def ver_carrossel(request, grade_id):
+        grade = get_object_or_404(Grade, pk=grade_id)
+        return render(request, 'ver/verCarrossel.html', {'grade': grade})
 
 
 class ConteudoList(LoginRequiredMixin, ListView):
