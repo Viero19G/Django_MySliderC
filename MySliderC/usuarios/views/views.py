@@ -6,23 +6,39 @@ from django.shortcuts import get_object_or_404
 
 from usuarios.models import Perfil
 
+
 class UsuarioCreate(CreateView):
-    template_name = "cadastros/create.html"
+    template_name = "cadastros/createUser.html"
     form_class = UsuarioForm
-    success_url= reverse_lazy('login')
+    success_url = reverse_lazy('login')
 
     def form_valid(self, form):
 
-        grupo = get_object_or_404(Group, name='usuario') # busca grupo
+     # Determine o tipo de usuário com base no campo enviado na requisição
+        tipo_usuario = self.request.POST.get('tipo_usuario')
 
-        url = super().form_valid(form)  # Cria o objeto
+    # Determine o grupo com base no tipo de usuário
+        grupo = None
 
-        self.object.groups.add(grupo) # pega objeto e define grupo
-        self.object.save() # salva objeto com novo grupo antes de retornar
+        if tipo_usuario == 'administrador':
+            grupo = get_object_or_404(Group, name='administrador')
+        elif tipo_usuario == 'operador_marketing':
+            grupo = get_object_or_404(Group, name='operador_marketing')
+        elif tipo_usuario == 'usuario':
+            grupo = get_object_or_404(Group, name='usuario')
 
-        Perfil.objects.create(usuario=self.object) ## Cria perfil associado ao user criado
+        if grupo:
+            # Crie o objeto de usuário
+            url = super().form_valid(form)
 
-        return url
+        # Atribua o usuário ao grupo desejado
+            self.object.groups.add(grupo)
+            self.object.save()
+
+        # Crie um perfil associado ao usuário
+            Perfil.objects.create(usuario=self.object)
+
+            return url
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
