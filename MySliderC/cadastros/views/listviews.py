@@ -85,6 +85,7 @@ class GradeList(LoginRequiredMixin, ListView):
             # O usuário não tem permissão para visualizar este carrossel
            
             return render(request, 'falha')  
+        
 
 class ConteudoList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
