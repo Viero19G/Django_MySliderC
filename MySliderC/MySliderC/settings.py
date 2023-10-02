@@ -42,10 +42,12 @@ INSTALLED_APPS = [
     'paginas.apps.PaginasConfig',
     'cadastros.apps.CadastrosConfig',
     'usuarios.apps.UsuariosConfig',
+    'permissoes.apps.PermissoesConfig',
 
 ##  instalados com PiP
     'crispy_forms',
     'crispy_bootstrap5',  
+    'rolepermissions',  
     'django_cleanup.apps.CleanupConfig', ## editar e limpar arquivos
 ]
 
@@ -136,6 +138,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+### CONSTANTES ##########
+
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
@@ -155,3 +159,7 @@ MEDIA_URL = "/pics/"
 LOGIN_REDIRECT_URL = 'inicio'
 LOGOUT_REDIRECT_URL = 'login'
 LOGIN_URL = 'login'
+
+
+### Constante de Grupos
+ROLEPERMISSIONS_MODULE = 'permissoes.roles'  ## define arquivo onde serão criadas as permissões
