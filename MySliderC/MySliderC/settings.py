@@ -43,6 +43,14 @@ INSTALLED_APPS = [
     'cadastros.apps.CadastrosConfig',
     'usuarios.apps.UsuariosConfig',
     'permissoes.apps.PermissoesConfig',
+    'django.contrib.sites',
+
+    ## para autenticação
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+
 
 ##  instalados com PiP
     'crispy_forms',
@@ -50,6 +58,8 @@ INSTALLED_APPS = [
     'rolepermissions',  
     'django_cleanup.apps.CleanupConfig', ## editar e limpar arquivos
 ]
+
+SITE_ID = 1
 
 #crispy form
 
@@ -65,6 +75,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'MySliderC.urls'
@@ -94,7 +105,7 @@ WSGI_APPLICATION = 'MySliderC.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'DB_APPDADOS3',
+        'NAME': 'DB_APPDADOS4',
         'USER': 'postgres',
         'PASSWORD': 'Viero22*',
         'HOST': 'LOCALHOST',
@@ -102,7 +113,10 @@ DATABASES = {
     }
 }
 
-
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

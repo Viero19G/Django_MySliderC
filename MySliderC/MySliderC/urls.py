@@ -26,7 +26,11 @@ urlpatterns = [
     path('paginas/', include('paginas.urls')),
     path('cadastros/', include('cadastros.urls')),
     path('usuarios/', include('usuarios.urls')),
+    path('accounts/', include('allauth.urls')),
+
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT )  # só em modo debug
+    # só em modo debug
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
