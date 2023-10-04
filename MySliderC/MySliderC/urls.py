@@ -26,6 +26,7 @@ urlpatterns = [
     path('paginas/', include('paginas.urls')),
     path('cadastros/', include('cadastros.urls')),
     path('usuarios/', include('usuarios.urls')),
+    path('permissoes/', include('permissoes.urls')),
     path('accounts/', include('allauth.urls')),
 
 ]
