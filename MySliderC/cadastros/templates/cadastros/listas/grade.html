@@ -29,7 +29,11 @@
             </td>
             <td>
                 {% for conteudo in grade.conteudo.all %}
-                {{ conteudo.title }}
+                {% if conteudo.tipo == 'video' %}
+                    {{ conteudo.video.title }}
+                    {% else %}
+                    {{ conteudo.imagem.title }}
+                    {% endif %}
                 {% if not forloop.last %}, {% endif %}
                 {% endfor %}
             </td>

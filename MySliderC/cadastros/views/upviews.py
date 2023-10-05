@@ -76,8 +76,8 @@ class ConteudoUpdate(LoginRequiredMixin, UpdateView):
 
 class VideoUpdate(LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
-    model = Conteudo
-    fields = [ 'title','sub_title','descricao','tempo', 'image']
+    model = Video
+    fields = [ 'video','title','sub_title','descricao']
     template_name = 'cadastros/create.html'
     success_url = reverse_lazy('listConteudo')
 
@@ -93,14 +93,14 @@ class VideoUpdate(LoginRequiredMixin, UpdateView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
 
-        context['titulo'] = "Editando Conteúdo"
+        context['titulo'] = "Editando Video"
         context['botao'] = "Salvar"
         return context
 
 
-class ConteudoUpdate(LoginRequiredMixin, UpdateView):
+class ImagemUpdate(LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
-    model = Conteudo
+    model = Imagem
     fields = [ 'title','sub_title','descricao','tempo', 'image']
     template_name = 'cadastros/create.html'
     success_url = reverse_lazy('listConteudo')
