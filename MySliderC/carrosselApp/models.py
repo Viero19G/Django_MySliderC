@@ -87,6 +87,7 @@ class Conteudo(models.Model):
     tipo = models.CharField(max_length=10, null=True, blank=True, choices=TIPO_CHOICES)
     video = models.ForeignKey(Video, on_delete=models.CASCADE, null=True, blank=True)
     imagem = models.ForeignKey(Imagem, on_delete=models.CASCADE, null=True, blank=True)
+   
 
 class Grade(models.Model):
     setor = models.ManyToManyField(Setor, related_name='grades_editadas', blank=True, verbose_name='Setores Onde Aparecerá')

@@ -105,7 +105,7 @@ class VideoCreate(LoginRequiredMixin, CreateView):
     model = Video
     fields = ['video', 'title', 'sub_title', 'descricao']
     template_name = 'cadastros/create.html'
-    success_url = reverse_lazy('listConteudo')
+    success_url = reverse_lazy('listVideo')
 
     def form_valid(self, form):
         user = self.request.user
@@ -139,7 +139,7 @@ class ImagemCreate(LoginRequiredMixin, CreateView):
     model = Imagem
     fields = ['image', 'title', 'sub_title', 'descricao', 'tempo']
     template_name = 'cadastros/create.html'
-    success_url = reverse_lazy('listConteudo')
+    success_url = reverse_lazy('listImagem')
 
     def form_valid(self, form):
         user = self.request.user
@@ -163,7 +163,7 @@ class ImagemCreate(LoginRequiredMixin, CreateView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
 
-        context['titulo'] = "Cadastro de Video"
+        context['titulo'] = "Cadastro de Imagem"
         context['botao'] = "Cadastrar"
         return context
 
