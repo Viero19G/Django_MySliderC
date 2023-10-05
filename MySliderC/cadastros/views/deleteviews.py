@@ -48,6 +48,34 @@ class ConteudoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
         context['titulo'] = "Excluindo Conteúdo"
         
         return context
+    
+class VideoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
+    group_required = u"administrador"
+    model = Video
+    template_name = 'cadastros/delete.html'
+    success_url = reverse_lazy('listConteudo')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['titulo'] = "Excluindo Conteúdo"
+        
+        return context
+    
+class ImagemDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
+    group_required = u"administrador"
+    model = Imagem
+    template_name = 'cadastros/delete.html'
+    success_url = reverse_lazy('listConteudo')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['titulo'] = "Excluindo Conteúdo"
+        
+        return context
 
 
 

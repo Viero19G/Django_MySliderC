@@ -74,6 +74,54 @@ class ConteudoUpdate(LoginRequiredMixin, UpdateView):
         context['botao'] = "Salvar"
         return context
 
+class VideoUpdate(LoginRequiredMixin, UpdateView):
+    login_url = reverse_lazy('login')
+    model = Conteudo
+    fields = [ 'title','sub_title','descricao','tempo', 'image']
+    template_name = 'cadastros/create.html'
+    success_url = reverse_lazy('listConteudo')
+
+    def dispatch(self, request, *args, **kwargs):
+        conteudo = self.get_object()
+
+        # Verifique se o usuário logado é o mesmo que criou o Conteúdo
+        if conteudo.usuario == request.user:
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return HttpResponseForbidden("Você não tem permissão para editar este Conteúdo.")
+        
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['titulo'] = "Editando Conteúdo"
+        context['botao'] = "Salvar"
+        return context
+
+
+class ConteudoUpdate(LoginRequiredMixin, UpdateView):
+    login_url = reverse_lazy('login')
+    model = Conteudo
+    fields = [ 'title','sub_title','descricao','tempo', 'image']
+    template_name = 'cadastros/create.html'
+    success_url = reverse_lazy('listConteudo')
+
+    def dispatch(self, request, *args, **kwargs):
+        conteudo = self.get_object()
+
+        # Verifique se o usuário logado é o mesmo que criou o Conteúdo
+        if conteudo.usuario == request.user:
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return HttpResponseForbidden("Você não tem permissão para editar este Conteúdo.")
+        
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['titulo'] = "Editando Conteúdo"
+        context['botao'] = "Salvar"
+        return context
+
+
 
 # class UsuarioUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
 #     login_url = reverse_lazy('login')

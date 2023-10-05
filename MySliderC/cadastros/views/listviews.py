@@ -109,6 +109,50 @@ class ConteudoList(LoginRequiredMixin, ListView):
 
         return queryset
 
+class VideoList(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
+    model = Video
+    template_name = 'cadastros/listas/video.html'
+    
+
+    def get_queryset(self):
+        user = self.request.user
+
+        # Verifique se o usuário pertence aos grupos 'administrador' ou 'marketing'
+        admin_group = Group.objects.get(name='administrador')
+        marketing_group = Group.objects.get(name='marketing')
+
+        if user.groups.filter(Q(name='administrador') | Q(name='marketing')).exists():
+            # Se o usuário pertencer a qualquer um dos grupos, mostre todo o conteúdo
+            queryset = Video.objects.all()
+        else:
+            # Se não pertencer a nenhum desses grupos, liste apenas o conteúdo do próprio usuário
+            queryset = Video.objects.filter(usuario=user)
+
+        return queryset
+    
+class ImagemList(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
+    model = Imagem
+    template_name = 'cadastros/listas/imagem.html'
+    
+
+    def get_queryset(self):
+        user = self.request.user
+
+        # Verifique se o usuário pertence aos grupos 'administrador' ou 'marketing'
+        admin_group = Group.objects.get(name='administrador')
+        marketing_group = Group.objects.get(name='marketing')
+
+        if user.groups.filter(Q(name='administrador') | Q(name='marketing')).exists():
+            # Se o usuário pertencer a qualquer um dos grupos, mostre todo o conteúdo
+            queryset = Imagem.objects.all()
+        else:
+            # Se não pertencer a nenhum desses grupos, liste apenas o conteúdo do próprio usuário
+            queryset = Imagem.objects.filter(usuario=user)
+
+        return queryset
+
 
 # class UsuarioList(LoginRequiredMixin, ListView):
 #     login_url = reverse_lazy('login')
