@@ -7,12 +7,17 @@ from cadastros.views.upviews import *
 from cadastros.views.deleteviews import *
 ### Importando view para listar
 from cadastros.views.listviews import *
+### importando viewjson
+from cadastros.views import jsonviews
 
 
 
 
 urlpatterns = [
     
+   ### URL JSON
+   path('api/grade/<int:grade_id>/conteudo/', jsonviews.conteudo_grade_json, name='conteudo_grade_json'),
+
    ## Para verGrade
    path('ver_grade/<int:grade_id>/', GradeList.ver_grade, name='verGrade'),
    

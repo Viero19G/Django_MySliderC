@@ -19,6 +19,11 @@
 
   <!-- dataTable -->
   <link href="{% static 'DataTables/datatables.min.css'%}" rel="stylesheet">
+{% block imports %}
+
+
+{% endblock %}
+
 
 </head>
 
@@ -175,20 +180,25 @@
   </div>
 
 
-</body>
+
 {% block rodape %}
 <footer class="footer">foot
   <!-- Conteúdo do rodapé aqui -->
 </footer>
 {% endblock %}
+
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'js/jquery.mask.min.js' %}"></script>
+<script src="{% static 'popper.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
 
  
 <script src="{% static 'DataTables/datatables.min.js'%}"></script>
 {% block scripts %}
 
 {% endblock %}
+</body>
 </html>

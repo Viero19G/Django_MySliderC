@@ -1,0 +1,37 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+{% load custom_filters %}
+
+
+{% block imports %}
+
+<link href="{% static 'css/styleCarrossel.css'%}" rel="stylesheet">
+
+{% endblock %}
+
+{% block conteudo %}
+<div class="slider">
+    {% for conteudo in grade.conteudo.all %}
+    {% if conteudo.tipo == 'video' and conteudo.video.video.url|slice:'-4:' == '.mp4'  %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <video class="slide-video" controls autoplay style="max-height: 300px; margin: 0 auto;">
+          <source src="{{ conteudo.video.video.url }}" type="video/mp4">
+          Seu navegador não suporta o formato de Video
+        </video>
+      </div>
+    {% elif conteudo.tipo == 'imagem' %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <img src="{{ conteudo.imagem.image.url }}" style="max-height: 300px; margin: 0 auto;">
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+<button class="prev">Anterior</button>
+<button class="next">Próximo</button>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'js/jsCarrossel.js'%}"></script>
+{% endblock %}

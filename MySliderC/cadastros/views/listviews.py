@@ -80,7 +80,7 @@ class GradeList(LoginRequiredMixin, ListView):
 
         # Verificar se o usuário é um editor de grade ou pertence a um setor onde a grade aparecerá
         if request.user in grade.usuariosEdit.all() or request.user.setor_set.filter(grades_editadas=grade).exists():
-            return render(request, 'ver/verCarrossel.html', {'grade': grade})
+            return render(request, 'ver/verCarrossel1.html', {'grade': grade})
         else:
             # O usuário não tem permissão para visualizar este carrossel
            

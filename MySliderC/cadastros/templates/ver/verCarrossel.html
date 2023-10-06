@@ -7,24 +7,20 @@
 {% if grade.conteudo.exists %}
 <div id="carouselExampleInterval" class="carousel slide text-center shadow">
   <div class="carousel-inner">
-  
-      {% for conteudo in grade.conteudo.all %}
-     
-        {% if conteudo.tipo == 'video' %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}" data-id="{{ forloop.counter }}">
-          <video controls autoplay style="max-height: 300px; margin: 0 auto;">
+    {% for conteudo in grade.conteudo.all %}
+      {% if conteudo.tipo == 'video' and conteudo.video.video.url|slice:'-4:' == '.mp4'  %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+          <video class="slide-video" controls autoplay style="max-height: 300px; margin: 0 auto;">
             <source src="{{ conteudo.video.video.url }}" type="video/mp4">
-            Seu navegador não suporta o elemento de vídeo.
+            Seu navegador não suporta o formato de Video
           </video>
         </div>
-        {% elif conteudo.tipo == 'imagem' %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}" data-id="{{ forloop.counter }}">
-          <img src="{{ conteudo.imagem.image.url }}" style="max-height: 300px; margin: 0 auto;" 
-          class="img-fluid d-block" data-bs-interval="{{ conteudo.imagem.imagem.tempo }}">
-        </div>>
-        {% endif %}
-      
-      {% endfor %}
+      {% elif conteudo.tipo == 'imagem' %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+          <img src="{{ conteudo.imagem.image.url }}" style="max-height: 300px; margin: 0 auto;">
+        </div>
+      {% endif %}
+    {% endfor %}
   </div>
   <a class="carousel-control-prev" href="#carouselExampleInterval" role="button" data-bs-slide="prev">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -34,8 +30,8 @@
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Próximo</span>
   </a>
+  <button id="play-pause" class="btn btn-primary">Play</button> <!-- Botão de play/pause -->
 </div>
-
 {% else %}
 <div class="text-center mt-3">
   <p>Grade vazia</p>
@@ -45,39 +41,75 @@
 
 {% block scripts %}
 <script>
-   $(document).ready(function () {
+  $(document).ready(function() {
     var carousel = $('#carouselExampleInterval');
-    var items = carousel.find('.carousel-inner .carousel-item');
-    var currentItem = 0;
-    var videoEnded = false;
+    var currentIndex = 0;
+    var videos = carousel.find('.slide-video');
+    var playPauseButton = $('#play-pause'); // Seleciona o botão de play/pause
+    var isPlaying = true; // Define o estado inicial do vídeo como "reproduzindo"
 
-    carousel.on('slide.bs.carousel', function (e) {
-      var nextItem = $(e.relatedTarget).data('id');
-      if (items[nextItem - 1].querySelector('video')) {
-        var video = items[nextItem - 1].querySelector('video');
-        videoEnded = false;
+    function iniciarProximoConteudo() {
+      var items = carousel.find('.carousel-item');
+      if (currentIndex < items.length) {
+        var conteudo = items[currentIndex];
+        var tipo = $(conteudo).find('video').length ? 'video' : 'imagem';
 
-        video.onended = function () {
-          videoEnded = true;
-        };
-      }
-    });
+        if (tipo === 'video') {
+          var video = $(conteudo).find('video')[0];
 
-    carousel.on('slid.bs.carousel', function (e) {
-      currentItem = carousel.find('.active').index();
-      if (items[currentItem].querySelector('video')) {
-        var video = items[currentItem].querySelector('video');
-        video.play();
+          // Verifique se o vídeo está carregado antes de tentar reproduzi-lo
+          video.addEventListener('loadeddata', function() {
+            if (isPlaying) {
+              video.play();
+              carousel.carousel('pause');
+            }
+          });
 
-        // Aguardar até que o vídeo termine antes de avançar
-        var checkVideoEnded = setInterval(function () {
-          if (videoEnded) {
-            carousel.carousel('next');
-            clearInterval(checkVideoEnded);
+          video.addEventListener('ended', function() {
+            video.pause();
+            currentIndex++;
+            if (currentIndex < items.length) {
+              setTimeout(function() {
+                carousel.carousel('next');
+                iniciarProximoConteudo();
+              }, 2000); // Espera 2 segundos antes de avançar para o próximo conteúdo
+            }
+          });
+
+          // Adiciona o evento de click ao botão de play/pause
+          playPauseButton.on('click', function() {
+            if (isPlaying) {
+              video.pause();
+              carousel.carousel('cycle');
+              isPlaying = false;
+              playPauseButton.text('Play'); // Altera o texto do botão para "Play"
+            } else {
+              video.play();
+              carousel.carousel('pause');
+              isPlaying = true;
+              playPauseButton.text('Pause'); // Altera o texto do botão para "Pause"
+            }
+          });
+
+          // Inicia o vídeo manualmente
+          // video.play();
+        } else if (tipo === 'imagem') {
+          currentIndex++;
+          if (currentIndex < items.length) {
+            setTimeout(function() {
+              carousel.carousel('next');
+              iniciarProximoConteudo();
+            }, 2000); // Espera 2 segundos antes de avançar para o próximo conteúdo
           }
-        }, 100); // Verifique a cada 100 milissegundos se o vídeo terminou
+        }
       }
+    }
+
+    carousel.on('slid.bs.carousel', function() {
+      iniciarProximoConteudo();
     });
+
+    iniciarProximoConteudo(); // Inicie o primeiro conteúdo
   });
 </script>
 {% endblock %}
