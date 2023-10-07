@@ -8,7 +8,7 @@ def conteudo_grade_json(request, grade_id):
 
         # Consulta para obter os conteúdos de tipo 'imagem' desta grade e seus IDs originais
         conteudo_imagem = Conteudo.objects.filter(grade=grade, tipo='imagem').order_by('id')
-        imagem_data = [{'id': conteudo.id, 'url': conteudo.imagem.image.url} for conteudo in conteudo_imagem]
+        imagem_data = [{'id': conteudo.id,'tempo':conteudo.imagem.tempo, 'url': conteudo.imagem.image.url} for conteudo in conteudo_imagem]
 
         # Consulta para obter os conteúdos de tipo 'video' desta grade e seus IDs originais
         conteudo_video = Conteudo.objects.filter(grade=grade, tipo='video').order_by('id')

@@ -2,36 +2,76 @@
 {% load static %}
 {% load custom_filters %}
 
-
 {% block imports %}
-
-<link href="{% static 'css/styleCarrossel.css'%}" rel="stylesheet">
-
+<link href="{% static 'css/styleCarrossel.css' %}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'css/slick.css' %}">
 {% endblock %}
 
 {% block conteudo %}
-<div class="slider">
-    {% for conteudo in grade.conteudo.all %}
-    {% if conteudo.tipo == 'video' and conteudo.video.video.url|slice:'-4:' == '.mp4'  %}
-      <div class="carousel-item {% if forloop.first %}active{% endif %}">
-        <video class="slide-video" controls autoplay style="max-height: 300px; margin: 0 auto;">
-          <source src="{{ conteudo.video.video.url }}" type="video/mp4">
-          Seu navegador não suporta o formato de Video
-        </video>
-      </div>
-    {% elif conteudo.tipo == 'imagem' %}
-      <div class="carousel-item {% if forloop.first %}active{% endif %}">
-        <img src="{{ conteudo.imagem.image.url }}" style="max-height: 300px; margin: 0 auto;">
-      </div>
+<div class="carousel">
+    {% if grade.conteudo.exists %}
+    <script>
+        var varU = "{{ grade.id }}";
+    </script>
     {% endif %}
-  {% endfor %}
+    <!-- Os itens do carrossel serão adicionados aqui dinamicamente -->
 </div>
+
 <button class="prev">Anterior</button>
 <button class="next">Próximo</button>
-
 {% endblock %}
 
 {% block scripts %}
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/slick.min.js' %}"></script>
 
-<script src="{% static 'js/jsCarrossel.js'%}"></script>
+<script>
+$(document).ready(function() {
+    var gradeId = varU;
+    var apiUrl = '/cadastros/api/grade/' + gradeId + '/conteudo/';
+    
+    // Função para inicializar o carrossel
+    function initSlickCarousel(data) {
+        var carousel = $('.carousel');
+        
+        // Limpar o conteúdo atual do carrossel
+        carousel.html('');
+        
+        // Se os dados incluem URLs de imagem, adicione-as ao carrossel
+        if (data.imagem_urls.length > 0) {
+            $.each(data.imagem_urls, function(index, imagem) {
+                // Crie um elemento de imagem com o tempo de exibição em segundos como atributo personalizado
+                var img = $('<img>').attr('src', imagem.url);
+                img.attr('data-tempo', imagem.tempo);
+                carousel.append(img);
+            });
+        }
+        
+        // Se os dados incluem URLs de vídeo, adicione-os ao carrossel
+        if (data.video_urls.length > 0) {
+            $.each(data.video_urls, function(index, video) {
+                // Crie um elemento de vídeo
+                var vid = $('<video controls>').attr('src', video.url);
+                carousel.append(vid);
+            });
+        }
+        
+        // Inicialize o carrossel Slick
+        carousel.slick({
+            autoplay: false, // Desativar reprodução automática inicial
+            infinite: true,  // Repetir o carrossel infinitamente
+            speed: 1000,     // Velocidade da transição em milissegundos
+        });
+    }
+    
+    // Faça uma solicitação AJAX para obter os dados JSON
+    $.ajax({
+        url: apiUrl,
+        dataType: 'json',
+        success: function(data) {
+            initSlickCarousel(data);
+        }
+    });
+});
+</script>
 {% endblock %}
