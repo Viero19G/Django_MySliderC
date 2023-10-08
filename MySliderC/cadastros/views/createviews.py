@@ -6,7 +6,6 @@ import os
 from carrosselApp.models import *
 from django.contrib.auth.models import Group
 from django.db.models import Q
-from datetime import datetime
 
 
 class SetorCreate(LoginRequiredMixin, CreateView):
@@ -104,7 +103,7 @@ class ConteudoCreate(LoginRequiredMixin, CreateView):
 class VideoCreate(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
     model = Video
-    fields = ['video', 'title', 'sub_title', 'descricao', 'tempo']
+    fields = ['video', 'title', 'sub_title', 'descricao']
     template_name = 'cadastros/create.html'
     success_url = reverse_lazy('listVideo')
 
@@ -118,7 +117,8 @@ class VideoCreate(LoginRequiredMixin, CreateView):
         if user.groups.filter(Q(name='administrador') | Q(name='marketing')).exists():
             # Se o usuário pertencer a qualquer um dos grupos, permita que ele crie o conteúdo
             form.instance.usuario = user
-
+            # atenção url default do django usa barras normais e para encontrar o arquivo no windows
+            # é necessário usar barras invertidas
             enviar = super().form_valid(form)
             caminho = r'C:\Users\gabri\Documents\projetos_django\DjangoProjeto_II\MySliderC'
 
@@ -235,25 +235,3 @@ class ImagemCreate(LoginRequiredMixin, CreateView):
         context['titulo'] = "Cadastro de Imagem"
         context['botao'] = "Cadastrar"
         return context
-
-
-# class UsuarioCreate(LoginRequiredMixin, CreateView):
-#     login_url = reverse_lazy('login')
-#     model = Usuario
-#     fields = [ 'usrNome','usrSenha', 'usrMail']
-#     template_name = 'cadastros/create.html'
-#     success_url = reverse_lazy('listUsuario')
-
-# class PerfilCreate(LoginRequiredMixin, CreateView):
-#     login_url = reverse_lazy('login')
-#     model = Perfil
-#     fields = [ 'perfilNome','descricao',]
-#     template_name = 'cadastros/create.html'
-#     success_url = reverse_lazy('listPerfil')
-
-# class Perfil_UsuarioCreate(LoginRequiredMixin, CreateView):
-#     login_url = reverse_lazy('login')
-#     model = Perfil_Usuario
-#     fields = [ 'descricao','usuario','perfil']
-#     template_name = 'cadastros/create.html'
-#     success_url = reverse_lazy('listUsuarioPerfil')
