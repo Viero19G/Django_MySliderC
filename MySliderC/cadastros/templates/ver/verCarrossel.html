@@ -5,18 +5,18 @@
 {% block conteudo %}
 <!-- Carrossel de Imagens e Vídeos dos Arquivos de Referência ao Conteúdo -->
 {% if grade.conteudo.exists %}
-<div id="carouselExampleInterval" class="carousel slide text-center shadow">
+<div id="carouselExampleInterval" class="carousel slide text-center shadow" data-bs-ride="carousel">
   <div class="carousel-inner">
     {% for conteudo in grade.conteudo.all %}
       {% if conteudo.tipo == 'video' and conteudo.video.video.url|slice:'-4:' == '.mp4'  %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-          <video class="slide-video" controls autoplay style="max-height: 300px; margin: 0 auto;">
+        <div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-interval="{{ conteudo.video.tempo }}">
+          <video class="slide-video" controls style="max-height: 300px; margin: 0 auto;">
             <source src="{{ conteudo.video.video.url }}" type="video/mp4">
-            Seu navegador não suporta o formato de Video
+            Seu navegador não suporta o formato de Vídeo.
           </video>
         </div>
       {% elif conteudo.tipo == 'imagem' %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-interval="{{ conteudo.imagem.tempo }}">
           <img src="{{ conteudo.imagem.image.url }}" style="max-height: 300px; margin: 0 auto;">
         </div>
       {% endif %}
@@ -32,84 +32,11 @@
   </a>
   <button id="play-pause" class="btn btn-primary">Play</button> <!-- Botão de play/pause -->
 </div>
+
+
 {% else %}
 <div class="text-center mt-3">
   <p>Grade vazia</p>
 </div>
 {% endif %}
-{% endblock %}
-
-{% block scripts %}
-<script>
-  $(document).ready(function() {
-    var carousel = $('#carouselExampleInterval');
-    var currentIndex = 0;
-    var videos = carousel.find('.slide-video');
-    var playPauseButton = $('#play-pause'); // Seleciona o botão de play/pause
-    var isPlaying = true; // Define o estado inicial do vídeo como "reproduzindo"
-
-    function iniciarProximoConteudo() {
-      var items = carousel.find('.carousel-item');
-      if (currentIndex < items.length) {
-        var conteudo = items[currentIndex];
-        var tipo = $(conteudo).find('video').length ? 'video' : 'imagem';
-
-        if (tipo === 'video') {
-          var video = $(conteudo).find('video')[0];
-
-          // Verifique se o vídeo está carregado antes de tentar reproduzi-lo
-          video.addEventListener('loadeddata', function() {
-            if (isPlaying) {
-              video.play();
-              carousel.carousel('pause');
-            }
-          });
-
-          video.addEventListener('ended', function() {
-            video.pause();
-            currentIndex++;
-            if (currentIndex < items.length) {
-              setTimeout(function() {
-                carousel.carousel('next');
-                iniciarProximoConteudo();
-              }, 2000); // Espera 2 segundos antes de avançar para o próximo conteúdo
-            }
-          });
-
-          // Adiciona o evento de click ao botão de play/pause
-          playPauseButton.on('click', function() {
-            if (isPlaying) {
-              video.pause();
-              carousel.carousel('cycle');
-              isPlaying = false;
-              playPauseButton.text('Play'); // Altera o texto do botão para "Play"
-            } else {
-              video.play();
-              carousel.carousel('pause');
-              isPlaying = true;
-              playPauseButton.text('Pause'); // Altera o texto do botão para "Pause"
-            }
-          });
-
-          // Inicia o vídeo manualmente
-          // video.play();
-        } else if (tipo === 'imagem') {
-          currentIndex++;
-          if (currentIndex < items.length) {
-            setTimeout(function() {
-              carousel.carousel('next');
-              iniciarProximoConteudo();
-            }, 2000); // Espera 2 segundos antes de avançar para o próximo conteúdo
-          }
-        }
-      }
-    }
-
-    carousel.on('slid.bs.carousel', function() {
-      iniciarProximoConteudo();
-    });
-
-    iniciarProximoConteudo(); // Inicie o primeiro conteúdo
-  });
-</script>
 {% endblock %}

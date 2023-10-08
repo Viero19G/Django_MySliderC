@@ -38,6 +38,7 @@ class Video(models.Model):
     title = models.CharField(max_length=150, verbose_name='Título')
     sub_title = models.CharField(max_length=200, verbose_name='Sub-Título')
     descricao = models.CharField(max_length=200, verbose_name='Descrição')
+    tempo = models.PositiveBigIntegerField(blank=True, null=True)
     usuario = models.ForeignKey(
         User, on_delete=models.PROTECT, verbose_name='Usuário', default=None)
 

@@ -6,6 +6,8 @@ from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
+from django.shortcuts import render
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -61,7 +63,7 @@ class GradeList(LoginRequiredMixin, ListView):
                 queryset = Grade.objects.none()
 
         return queryset
-    
+   
     @login_required(login_url='login')  # Usar o decorator login_required para exigir autenticação
     def ver_grade(request, grade_id):
         grade = get_object_or_404(Grade, pk=grade_id)
@@ -80,11 +82,11 @@ class GradeList(LoginRequiredMixin, ListView):
 
         # Verificar se o usuário é um editor de grade ou pertence a um setor onde a grade aparecerá
         if request.user in grade.usuariosEdit.all() or request.user.setor_set.filter(grades_editadas=grade).exists():
-            return render(request, 'ver/verCarrossel1.html', {'grade': grade})
+            return render(request, 'ver/verCarrossel.html', {'grade': grade})
         else:
             # O usuário não tem permissão para visualizar este carrossel
            
-            return render(request, 'falha')  
+            return render(request, 'falha') 
         
 
 class ConteudoList(LoginRequiredMixin, ListView):

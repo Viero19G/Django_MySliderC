@@ -54,7 +54,7 @@ class VideoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     group_required = u"administrador"
     model = Video
     template_name = 'cadastros/delete.html'
-    success_url = reverse_lazy('listConteudo')
+    success_url = reverse_lazy('listVideo')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -68,7 +68,7 @@ class ImagemDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     group_required = u"administrador"
     model = Imagem
     template_name = 'cadastros/delete.html'
-    success_url = reverse_lazy('listConteudo')
+    success_url = reverse_lazy('listImagem')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)

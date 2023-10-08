@@ -153,6 +153,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 ### CONSTANTES ##########
+MOVIEPY_SETTINGS = {
+   "FFMPEG_BINARY": "C:\Program Files\ffmpeg\bin\ffmpeg.exe",
+   "FFPROBE_BINARY": "C:\Program Files\ffmpeg\bin\ffprobe.exe",
+   "FFPLAY_BINARY": "C:\Program Files\ffmpeg\bin\ffplay.exe",
+}
 
 STATIC_URL = '/static/'
 
