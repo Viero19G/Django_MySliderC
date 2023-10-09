@@ -1,21 +1,44 @@
 {% extends 'paginas/modelo.html' %}
 {% load static %}
-
+{% load custom_filters %}
 {% block conteudo %}
 
 <div class="card-group">
     <div class="card"style="max-width: 300px;">
         {% if grade.conteudo.exists %}
-        {% for conteudo in grade.conteudo.all %}
-        {% if conteudo.tipo == 'video' %}
-        <video controls class="card-img-top" style="max-height: 300px; margin: 0 auto;">
-            <source src="{{ conteudo.video.video.url }}" type="video/mp4">
-            Seu navegador não suporta o elemento de vídeo.
-          </video>
-        {% else %}
-        <img src="{{ grade.conteudo.first.image.url }}" class="card-img-top" alt="...">
-        {% endif %}
-        {% endfor %}
+        <div id="carouselExampleInterval" class="carousel slide text-center shadow" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              {% for conteudo in grade.conteudo.all %}
+              {% if conteudo.tipo == 'video' and conteudo.video.video.url|slice:'-4:' == '.mp4' %}
+          
+              <div class="carousel-item {% if forloop.first %}active{% endif %}"
+                data-bs-interval="{{ conteudo.video.tempo|multiply:100 }}">
+                <video class="slide-video" controls style="height: 25vh; width: 100%; object-fit: contain;">
+                  <source src="{{ conteudo.video.video.url }}" type="video/mp4">
+                  Seu navegador não suporta o formato de Vídeo.
+                </video>
+              </div>
+          
+              {% elif conteudo.tipo == 'imagem' %}
+          
+              <div class="carousel-item {% if forloop.first %}active{% endif %}"
+                data-bs-interval="{{ conteudo.imagem.tempo|multiply:100  }}">
+                <img src="{{ conteudo.imagem.image.url }}" style="max-height: 100vh; width: 100%; object-fit: contain;">
+              </div>
+          
+              {% endif %}
+              {% endfor %}
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleInterval" role="button" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Anterior</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleInterval" role="button" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Próximo</span>
+            </a>
+          
+          </div>
 
         {% else %}
         <div class="text-center mt-3">
