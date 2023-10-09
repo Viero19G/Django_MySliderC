@@ -15,7 +15,7 @@ class SetorList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Setor
     template_name = 'cadastros/listas/setor.html'
-    paginate_by = 2
+    paginate_by = 10
 
     def get_queryset(self):
         user = self.request.user
@@ -37,6 +37,7 @@ class GradeList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Grade
     template_name = 'cadastros/listas/grade.html'
+    paginate_by = 10
 
     def get_queryset(self):
         user = self.request.user
@@ -93,7 +94,7 @@ class ConteudoList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Conteudo
     template_name = 'cadastros/listas/conteudo.html'
-    
+    paginate_by = 10
 
     def get_queryset(self):
         user = self.request.user
@@ -115,7 +116,7 @@ class VideoList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Video
     template_name = 'cadastros/listas/video.html'
-    
+    paginate_by = 10
 
     def get_queryset(self):
         user = self.request.user
@@ -137,7 +138,7 @@ class ImagemList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Imagem
     template_name = 'cadastros/listas/imagem.html'
-    
+    paginate_by = 10
 
     def get_queryset(self):
         user = self.request.user
@@ -154,19 +155,3 @@ class ImagemList(LoginRequiredMixin, ListView):
             queryset = Imagem.objects.filter(usuario=user)
 
         return queryset
-
-
-# class UsuarioList(LoginRequiredMixin, ListView):
-#     login_url = reverse_lazy('login')
-#     model = Usuario
-#     template_name = 'cadastros/listas/usuario.html'
-
-# class PerfilList(LoginRequiredMixin, ListView):
-#     login_url = reverse_lazy('login')
-#     model = Perfil
-#     template_name = 'cadastros/listas/perfil.html'
-
-# class Perfil_UsuarioList(LoginRequiredMixin, ListView):
-#     login_url = reverse_lazy('login')
-#     model = Perfil_Usuario
-#     template_name = 'cadastros/listas/perfilUsuario.html'
