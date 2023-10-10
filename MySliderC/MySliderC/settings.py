@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
-
 ##  instalados com PiP
     'crispy_forms',
     'crispy_bootstrap5',  

@@ -29,6 +29,7 @@ urlpatterns = [
     path('permissoes/', include('permissoes.urls')),
     path('accounts/', include('allauth.urls')),
 
+
 ]
 
 if settings.DEBUG:
