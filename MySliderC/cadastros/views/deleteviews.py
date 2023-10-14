@@ -1,10 +1,15 @@
 from django.views.generic.edit import  DeleteView   ##### views para Delete
 from carrosselApp.models import *
 from django.urls import reverse_lazy
-
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.contrib.auth.models import Group
 from braces.views import GroupRequiredMixin
+
+# Função de verificação para permitir apenas superusuários
+def is_superuser(user):
+    return user.is_superuser
+
 
 class SetorDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 
@@ -77,7 +82,11 @@ class ImagemDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
         
         return context
 
-
+@user_passes_test(is_superuser)
+class DeletarGrupoView(LoginRequiredMixin, DeleteView):
+    model = Group
+    template_name = "cadastros/delete.html"
+    success_url = reverse_lazy('listGroups')
 
 # class UsuarioDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 #     login_url = reverse_lazy('login')

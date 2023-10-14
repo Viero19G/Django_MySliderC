@@ -4,8 +4,14 @@ from django.views.generic.edit import CreateView
 from moviepy.editor import VideoFileClip
 import os
 from carrosselApp.models import *
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.db.models import Q
+from django.contrib.auth.decorators import user_passes_test
+
+
+# Função de verificação para permitir apenas superusuários
+def is_superuser(user):
+    return user.is_superuser
 
 
 class SetorCreate(LoginRequiredMixin, CreateView):
@@ -235,3 +241,23 @@ class ImagemCreate(LoginRequiredMixin, CreateView):
         context['titulo'] = "Cadastro de Imagem"
         context['botao'] = "Cadastrar"
         return context
+
+
+
+@user_passes_test(is_superuser)
+class CriarGrupoView(CreateView):
+    model = Group
+    template_name = "cadastros/createGroup.html"
+    success_url = reverse_lazy('listGroup')
+    fields = ['name']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['users'] = User.objects.all()  # Obtém todos os usuários
+        return context
+
+    def form_valid(self, form):
+        users = self.request.POST.getlist('users')  # Obtém a lista de usuários selecionados
+        grupo = form.save()
+        grupo.user_set.add(*users)  # Adiciona os usuários ao grupo
+        return super().form_valid(form)

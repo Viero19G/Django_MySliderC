@@ -4,6 +4,15 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
 from django.http import HttpResponseForbidden
+from django.contrib.auth.models import Group, User
+from django.contrib.auth.decorators import user_passes_test
+
+
+
+# Função de verificação para permitir apenas superusuários
+def is_superuser(user):
+    return user.is_superuser
+
 
 class SetorUpdate(LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
@@ -120,28 +129,22 @@ class ImagemUpdate(LoginRequiredMixin, UpdateView):
         context['titulo'] = "Editando Conteúdo"
         context['botao'] = "Salvar"
         return context
+    
 
+@user_passes_test(is_superuser)
+class EditarGrupoView(UpdateView):
+    model = Group
+    template_name = "cadastros/editGroup.html"
+    success_url = reverse_lazy('listGroups')
+    fields = ['name']  # Adicione outros campos do grupo, se necessário
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['users'] = User.objects.all()
+        return context
 
-# class UsuarioUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
-#     login_url = reverse_lazy('login')
-#     model = Usuario
-#     fields = [ 'usrNome','usrSenha', 'usrMail']
-#     template_name = 'cadastros/create.html'
-#     success_url = reverse_lazy('listUsuario')
-
-# class PerfilUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
-#     login_url = reverse_lazy('login')
-#     group_required =  u"administrador"
-#     model = Perfil
-#     fields = [ 'perfilNome','descricao',]
-#     template_name = 'cadastros/create.html'
-#     success_url = reverse_lazy('listPerfil')
-
-# class Perfil_UsuarioUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
-#     login_url = reverse_lazy('login')
-#     group_required =  u"administrador"
-#     model = Perfil_Usuario
-#     fields = [ 'descricao','usuario','perfil']
-#     template_name = 'cadastros/create.html'
-#     success_url = reverse_lazy('listUsuarioPerfil')
+    def form_valid(self, form):
+        users = self.request.POST.getlist('users')
+        grupo = form.save()
+        grupo.user_set.set(users)  # Define a lista de usuários para o grupo
+        return super().form_valid(form)
