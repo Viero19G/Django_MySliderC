@@ -6,7 +6,8 @@ from cadastros.views.upviews import *
 # importando views de delete
 from cadastros.views.deleteviews import *
 # Importando view para listar
-from cadastros.views.listviews import *
+from cadastros.views.listviews import * 
+
 
 
 urlpatterns = [
@@ -47,5 +48,7 @@ urlpatterns = [
     path('imagem/', ImagemCreate.as_view(), name='cadastrar-imagem'),
     path('listar/imagem/', ImagemList.as_view(), name='listImagem'),
     path('editar/imagem/<int:pk>/', ImagemUpdate.as_view(), name='upImagem'),
+
+
 
 ]

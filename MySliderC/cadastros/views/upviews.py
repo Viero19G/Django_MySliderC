@@ -4,14 +4,9 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
 from django.http import HttpResponseForbidden
-from django.contrib.auth.models import Group, User
-from django.contrib.auth.decorators import user_passes_test
 
 
 
-# Função de verificação para permitir apenas superusuários
-def is_superuser(user):
-    return user.is_superuser
 
 
 class SetorUpdate(LoginRequiredMixin, UpdateView):
@@ -130,21 +125,3 @@ class ImagemUpdate(LoginRequiredMixin, UpdateView):
         context['botao'] = "Salvar"
         return context
     
-
-@user_passes_test(is_superuser)
-class EditarGrupoView(UpdateView):
-    model = Group
-    template_name = "cadastros/editGroup.html"
-    success_url = reverse_lazy('listGroups')
-    fields = ['name']  # Adicione outros campos do grupo, se necessário
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['users'] = User.objects.all()
-        return context
-
-    def form_valid(self, form):
-        users = self.request.POST.getlist('users')
-        grupo = form.save()
-        grupo.user_set.set(users)  # Define a lista de usuários para o grupo
-        return super().form_valid(form)

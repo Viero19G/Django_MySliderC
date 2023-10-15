@@ -1,14 +1,11 @@
-from django.views.generic.edit import  DeleteView   ##### views para Delete
+from django.views.generic.edit import DeleteView  # views para Delete
 from carrosselApp.models import *
 from django.urls import reverse_lazy
-from django.contrib.auth.decorators import user_passes_test
+
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import Group
+
 from braces.views import GroupRequiredMixin
 
-# Função de verificação para permitir apenas superusuários
-def is_superuser(user):
-    return user.is_superuser
 
 
 class SetorDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
@@ -26,6 +23,7 @@ class SetorDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 
         return context
 
+
 class GradeDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     group_required = u"administrador"
@@ -40,6 +38,7 @@ class GradeDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 
         return context
 
+
 class ConteudoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     group_required = u"administrador"
@@ -51,9 +50,10 @@ class ConteudoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
         context = super().get_context_data(*args, **kwargs)
 
         context['titulo'] = "Excluindo Conteúdo"
-        
+
         return context
-    
+
+
 class VideoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     group_required = u"administrador"
@@ -65,9 +65,10 @@ class VideoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
         context = super().get_context_data(*args, **kwargs)
 
         context['titulo'] = "Excluindo Conteúdo"
-        
+
         return context
-    
+
+
 class ImagemDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     group_required = u"administrador"
@@ -79,14 +80,11 @@ class ImagemDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
         context = super().get_context_data(*args, **kwargs)
 
         context['titulo'] = "Excluindo Conteúdo"
-        
+
         return context
 
-@user_passes_test(is_superuser)
-class DeletarGrupoView(LoginRequiredMixin, DeleteView):
-    model = Group
-    template_name = "cadastros/delete.html"
-    success_url = reverse_lazy('listGroups')
+
+
 
 # class UsuarioDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 #     login_url = reverse_lazy('login')

@@ -4,16 +4,13 @@ from django.urls import reverse_lazy
 from django.contrib.auth.models import User, Group
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-# Função de verificação para permitir apenas superusuários
-def is_superuser(user):
-    return user.is_superuser
 
 class SetorList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
@@ -160,8 +157,3 @@ class ImagemList(LoginRequiredMixin, ListView):
 
         return queryset
     
-@user_passes_test(is_superuser)
-class ListaGruposView(ListView):
-    model = Group
-    template_name = "cadastros/listGroups.html"
-    context_object_name = 'grupos'

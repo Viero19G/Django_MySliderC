@@ -1,6 +1,7 @@
-{% extends "base.html" %}
+{% extends 'paginas/modelo.html' %}
+{% load static %}
 
-{% block content %}
+{% block conteudo %}
   <h1>Criar Grupo</h1>
   <form method="post">
     {% csrf_token %}
