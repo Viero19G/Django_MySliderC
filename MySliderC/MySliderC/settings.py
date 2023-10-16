@@ -45,11 +45,7 @@ INSTALLED_APPS = [
     'permissoes.apps.PermissoesConfig',
     'django.contrib.sites',
 
-    ## para autenticação
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
+
 
 ##  instalados com PiP
     'crispy_forms',
@@ -74,7 +70,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'MySliderC.urls'
@@ -112,19 +107,8 @@ DATABASES = {
     }
 }
 
-AUTHENTICATION_BACKENDS = [
-  # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
 
-    # `allauth` specific authentication methods, such as login by email
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
 
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_LOGOUT_ON_GET = True
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
