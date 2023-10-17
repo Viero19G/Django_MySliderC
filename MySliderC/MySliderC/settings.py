@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'permissoes.apps.PermissoesConfig',
     'django.contrib.sites',
 
-
+##abordagem para google
+    'social_django',
 
 ##  instalados com PiP
     'crispy_forms',
@@ -53,9 +54,15 @@ INSTALLED_APPS = [
     'rolepermissions',  
     'django_cleanup.apps.CleanupConfig', ## editar e limpar arquivos
 ]
-
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+    
+)
 SITE_ID = 1
 
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '684589820544-dthsacqc22lvpakm54iu10qt6fih9jfs.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 #crispy form
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
