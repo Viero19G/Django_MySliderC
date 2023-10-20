@@ -45,26 +45,33 @@ INSTALLED_APPS = [
     'permissoes.apps.PermissoesConfig',
     'django.contrib.sites',
 
-##abordagem para google
+    # abordagem para google
     'social_django',
 
-##  instalados com PiP
+    # UML
+    'django_extensions',
+
+    # instalados com PiP
     'crispy_forms',
-    'crispy_bootstrap5',  
-    'rolepermissions',  
-    'django_cleanup.apps.CleanupConfig', ## editar e limpar arquivos
+    'crispy_bootstrap5',
+    'rolepermissions',
+    'django_cleanup.apps.CleanupConfig',  # editar e limpar arquivos
 ]
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
-    
+
 )
 SITE_ID = 1
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '684589820544-dthsacqc22lvpakm54iu10qt6fih9jfs.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
-#crispy form
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '684589820544-8tqeet4tmno42phq4i68n535so8iugml.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = [
+    'localhost', 'http://127.0.0.1/', '127.0.0.1']
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:8000/complete/google-oauth2/'
 
+
+# crispyform
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
@@ -115,8 +122,6 @@ DATABASES = {
 }
 
 
-
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -153,9 +158,9 @@ USE_TZ = True
 
 ### CONSTANTES ##########
 MOVIEPY_SETTINGS = {
-   "FFMPEG_BINARY": "C:\Program Files\ffmpeg\bin\ffmpeg.exe",
-   "FFPROBE_BINARY": "C:\Program Files\ffmpeg\bin\ffprobe.exe",
-   "FFPLAY_BINARY": "C:\Program Files\ffmpeg\bin\ffplay.exe",
+    "FFMPEG_BINARY": "C:\Program Files\ffmpeg\bin\ffmpeg.exe",
+    "FFPROBE_BINARY": "C:\Program Files\ffmpeg\bin\ffprobe.exe",
+    "FFPLAY_BINARY": "C:\Program Files\ffmpeg\bin\ffplay.exe",
 }
 
 STATIC_URL = '/static/'
@@ -168,16 +173,17 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-## config para uploads
-### pode se definir um local compartilhado, como um diretório público etc...
+# config para uploads
+# pode se definir um local compartilhado, como um diretório público etc...
 MEDIA_ROOT = os.path.join(BASE_DIR, "pics")
 
 MEDIA_URL = "/pics/"
-### configurações de autenticação
+# configurações de autenticação
 LOGIN_REDIRECT_URL = 'inicio'
 LOGOUT_REDIRECT_URL = 'login'
 LOGIN_URL = 'login'
 
 
-### Constante de Grupos
-ROLEPERMISSIONS_MODULE = 'permissoes.roles'  ## define arquivo onde serão criadas as permissões
+# Constante de Grupos
+# define arquivo onde serão criadas as permissões
+ROLEPERMISSIONS_MODULE = 'permissoes.roles'

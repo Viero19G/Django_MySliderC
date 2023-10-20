@@ -3,7 +3,7 @@ from django.contrib.auth import views as auth_views
 from usuarios.views.views import *
 from usuarios.views.upviews import *
 from usuarios.views.listviews import *
-from django.urls import path, re_path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from usuarios.views.authview import social_auth_google_redirect 
 
@@ -21,8 +21,10 @@ urlpatterns = [
 
 
  # URL para iniciar o processo de autenticação do Google
-    path('auth/google/', auth_views.LoginView.as_view(), name='social:begin', kwargs={'backend': 'google-oauth2'}),
+    path('auth/google/', auth_views.LoginView.as_view(), name='social_begin', kwargs={'backend': 'google-oauth2'}),
     
     # URL para redirecionar após a autenticação do Google
     path('auth/google/redirect/', social_auth_google_redirect, name='social_auth_google_redirect'),
+
+    path('usuarios/auth/', include('social_django.urls', namespace='social')),
 ]
