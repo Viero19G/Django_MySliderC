@@ -1,0 +1,19 @@
+{
+    "web": {
+        "client_id": "684589820544-4i5mk7588vsvrh7a4r9lqqs8q4d6f2m2.apps.googleusercontent.com",
+        "project_id": "meu-primeiro-app-py-planilha",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_secret": "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",
+        "redirect_uris": [
+            "http://127.0.0.1:8000",
+            "http://127.0.0.1:8000/usuarios/usuarios/auth/complete/google-oauth2/"
+        ],
+        "javascript_origins": [
+            "http://127.0.0.1",
+            "http://localhost",
+            "http://127.0.0.1:8000"
+        ]
+    }
+}

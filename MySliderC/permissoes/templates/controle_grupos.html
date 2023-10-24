@@ -1,0 +1,25 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerenciar Grupos</title>
+</head>
+<body>
+    {% block conteudo %}
+    <h1>Grupos</h1>
+    <ul>
+        {% for group in groups %}
+            <li>{{ group.name }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Novo Grupo</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Criar Grupo</button>
+    </form>
+    {% endblock %}
+</body>
+</html>

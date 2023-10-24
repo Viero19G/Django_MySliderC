@@ -1,0 +1,64 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+   
+    <title>Bootstrap Example</title>
+   
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body class="p-3 m-0 border-0 bd-example m-0 border-0">
+
+    <!-- Example Code -->
+<!-- 
+    <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+      <div class="carousel-inner">
+  
+        {% for object in obj %}
+        <div class="carousel-item {% if forloop.counter0 == 0 %} active {% endif %}">
+  
+          <img src="{{object.image.url}}" style="height: 585px;" class="img-fluid d-block w-100" alt="...">
+          <div class="carousel-caption d-none d-md-block">
+            <h1 class="animate__animated animate__fadeInDown">{{object.title}}</h1>
+            <h3 class="animate__animated animate__zoomIn">{{object.sub_title}}</h3>
+            <Button class="animate__animated animate__zoomIn mt-3 p-4 px-5 btn font-weight-bold"> About us</Button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div> -->
+    {% block conteudo %}
+    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        {% for object in obj %}
+        <div class="carousel-item {% if forloop.counter0 == 0 %} active {% endif %}" data-bs-interval="{{object.tempo}}">
+          <img src="{{object.image.url}}" style="height: 585px;" class="img-fluid d-block w-100" alt="...">
+        <!-- </div>
+        <div class="carousel-item" data-bs-interval="2000">
+          <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Second slide" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#666"></rect><text x="50%" y="50%" fill="#444" dy=".3em">Second slide</text></svg>
+        </div>
+        <div class="carousel-item active">
+          <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Third slide" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#555"></rect><text x="50%" y="50%" fill="#333" dy=".3em">Third slide</text></svg>
+        </div> -->
+      </div>
+      {% endfor %}
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    {% endblock %}
+    <!-- End Example Code -->
+  </body>
+</html>

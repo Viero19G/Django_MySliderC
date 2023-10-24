@@ -1,0 +1,87 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+
+{% block conteudo %}
+  <h3>Editando Grade</h3>
+  <a href="{% url 'listGrade' %}" class="btn btn-secondary btn-sm">Voltar para a Lista</a>
+
+  <hr>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-primary">{{ botao }}</button>
+    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#visualizarModal">
+      Visualizar
+    </button>
+    <a href="{% url 'listGrade' %}" class="btn btn-danger">Cancelar</a>
+  </form>
+
+  <!-- Modal de Visualização -->
+  <div class="modal fade" id="visualizarModal" tabindex="-1" aria-labelledby="visualizarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="visualizarModalLabel">Visualização da Grade</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+           <div id="carouselVisualizacao" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              {% for conteudo in grade.conteudo.all %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ conteudo.image.url }}" style="max-height: 300px; margin: 0 auto;" class="img-fluid d-block" alt="{{ conteudo.title }}">
+                <div class="carousel-caption">
+                  <h5>{{ conteudo.title }}</h5>
+                  <p>{{ conteudo.sub_title }}</p>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            <a class="carousel-control-prev" href="#carouselVisualizacao" role="button" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselVisualizacao" role="button" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </a>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carrossel de Imagens dos Arquivos de Referência ao Conteúdo -->
+  {% if grade.conteudo.exists %}
+  <div id="carouselExampleInterval" class="carousel slide text-center shadow" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      {% for conteudo in grade.conteudo.all %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <img src="{{ conteudo.image.url }}" style="max-height: 300px; margin: 0 auto;" class="img-fluid d-block" alt="{{ conteudo.title }}">
+        <div class="carousel-caption">
+          <h5>{{ conteudo.title }}</h5>
+          <p>{{ conteudo.sub_title }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleInterval" role="button" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleInterval" role="button" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </a>
+  </div>
+  {% else %}
+  <div class="text-center mt-3">
+    <p>Grade vazia</p>
+  </div>
+  {% endif %}
+{% endblock %}

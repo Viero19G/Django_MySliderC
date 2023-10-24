@@ -1,0 +1,18 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+
+{% block content %}
+  <h1>Editar Grupo: {{ grupo.name }}</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <label for="id_users">Usuários:</label>
+    <select name="users" id="id_users" multiple>
+      {% for user in users %}
+        <option value="{{ user.id }}" {% if user in grupo.user_set.all %}selected{% endif %}>{{ user.username }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Salvar Alterações</button>
+  </form>
+  <a href="{% url 'myapp:lista_grupos' %}">Voltar para a lista de grupos</a>
+{% endblock %}

@@ -1,0 +1,212 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% block titulo %}
+  <title>Modelo</title>
+  {% endblock %}
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<!-- Bootstrap -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+  <!-- CSS na unha -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+  <!-- import slick -->
+   <link rel="stylesheet" type="text/css" href="{% static 'css/slick.css' %}">
+
+  <!-- dataTable -->
+  <link href="{% static 'DataTables/datatables.min.css'%}" rel="stylesheet">
+{% block imports %}
+
+
+{% endblock %}
+
+
+</head>
+
+<body>
+  {% block menu %}
+  <nav class="navbar navbar-expand-lg navbar-light bg-secondary">
+    <div class="container-fluid bg-body-tertiary">
+      <a class="navbar-brand bg-body-tertiary" href="{%url 'inicio'%}">
+        <img src="{% static 'imgs/logo.png' %}" alt="Logo" style="width: 20px; height: auto;">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="container col-md-6 ml-auto" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{%url 'grade'%}"><i
+              class="fas fa-home"></i>Menu</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fas fa-images"></i>Carrossel</a>
+          </li>
+
+          <!-- navegando para creates -->
+          {% if request.user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false"><i class="fas fa-plus"></i> Cadastros</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{%url 'cadastrar-video'%}">Video</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{%url 'cadastrar-imagem'%}">Imagem</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{%url 'cadastrar-setor'%}">Setor</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{%url 'cadastrar-grade'%}">Grade</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{%url 'cadastrar-conteudo'%}">Conteúdo</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+        
+              <li><a class="dropdown-item" href="#">Perfil para o Usuario</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+            </ul>
+          </li>
+          {% endif %}
+          <!--  -->
+          <!-- navegando para Listas -->
+          {% if request.user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false"><i class="fas fa-list"></i> Listar</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{%url 'listVideo'%}">Video</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{%url 'listImagem'%}">Imagem</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{%url 'listSetor'%}">Setor</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{%url 'listGrade'%}">Grade</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{%url 'listConteudo'%}">Conteúdo</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+         
+              <li><a class="dropdown-item" href="#">Acessos</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+            </ul>
+          </li>
+          {% endif %}
+          <!--  -->
+
+        <!-- Navegando para Usuario -->
+<ul class="navbar-nav  ">
+  <!-- Itens de menu do dropdown "Usuários" aqui -->
+  {% if request.user.is_authenticated %}
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+    aria-expanded="false"><i class="fas fa-user"></i> {{ request.user }}</a>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="{% url 'upPerfil'%}">Meus Dados</a></li>
+      <li><a class="dropdown-item" href="{% url 'verUsers'%}">Usuários</a></li>
+      <li><a class="dropdown-item" href="#">Alterar Senha</a></li>
+      <li>
+        <hr class="dropdown-divider">
+      </li>
+      <li><a class="dropdown-item" href="{% url 'logout'%}">Sair</a></li>
+      <li>
+        <hr class="dropdown-divider">
+      </li>
+    </ul>
+  </li>
+  {% else %}
+
+  <div class="btn-group">
+  
+    <button type="button" class="btn  dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-plus"></i>
+      <span class="visually-hidden">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu">
+      <li> <a href="{% url 'registrar'  %}" class="nav-link">
+        <i class="fas fa-user-plus"></i> <!-- Ícone para Novo Usuário -->
+        Novo Usuário
+      </a></li>
+      <li> <a class="nav-link" href="{%url 'login'%}">
+        <i class="fas fa-sign-in-alt"></i> <!-- Ícone para Entrar -->
+        Entrar
+      </a></li>
+    </ul>
+  </div>
+  {% endif %}
+</ul>
+<!--  -->
+        </ul>
+      </div>
+    </div>
+  </nav>
+  {% endblock %}
+
+
+  {% block destaque %}
+  <div class="bg-secondary">
+    <!-- Conteúdo do destaque aqui, se houver -->
+  </div>
+  {% endblock %}
+
+  <div class="container">
+    {% block conteudo %}
+    <h3>Template de modelo</h3>
+    <p>Conteúdo do site</p>
+    {% endblock %}
+  </div>
+
+
+
+{% block rodape %}
+<footer class="footer">foot
+  <!-- Conteúdo do rodapé aqui -->
+</footer>
+{% endblock %}
+
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'js/jquery.mask.min.js' %}"></script>
+<script src="{% static 'popper.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/slick.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
+
+ 
+<script src="{% static 'DataTables/datatables.min.js'%}"></script>
+{% block scripts %}
+
+{% endblock %}
+</body>
+</html>

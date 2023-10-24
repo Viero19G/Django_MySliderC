@@ -1,0 +1,32 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="pt-br">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block titulo %}
+    <title>Pagina inicial
+    </title>
+    {% endblock %}
+    <link rel="stylesheet" href="{%static 'css/style.css' %}">
+</head>
+<body>
+    
+    {% block destaque %}
+    <h3>Pagina Inicial</h3>
+    
+    {% endblock %}
+
+
+    {% block conteudo %}
+    {% if user.perfil.nome_completo %}
+    Bem Vindo ao sistema {{ user.perfil.nome_completo}}.
+    {% else %}
+    Você precisa completar seu cadastro. Acesse os <a href="{% url 'upPerfil'%}">meus dados</a> para atualizar.
+    {% endif %}
+    {% endblock %}
+
+
+</body>
+</html>

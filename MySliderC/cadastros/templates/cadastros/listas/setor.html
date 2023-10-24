@@ -1,0 +1,56 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+
+
+{% block conteudo %}
+<h3>Lista de Setores Registrados</h3>
+<a href="{% url 'cadastrar-setor' %}" class="btn btn-primary btn-sm">Adicionar Novo</a>
+
+<hr>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <tr>
+            <th>Nome</th>
+            <th>Membros</th>
+            <th>opções</th>
+        </tr>
+
+        <!-- percorrer lista de objetos -->
+        {% for setor in object_list %}
+        <tr>
+            <td>{{ setor.nome }}</td>
+            <td>
+                {% for membro in setor.membros.all %}
+                {{ membro.username }}
+                {% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+            <td> 
+                <a href="{% url 'upSetor' setor.pk %}" class="btn btn-warning btn-sm" title="editar">
+                    <i class="fas fa-pencil-alt"></i> <!-- Ícone de lápis -->
+                </a>
+                <a href="{% url 'delSetor' setor.pk %}" class="btn btn-danger btn-sm"  title="excluir">
+                    <i class="fas fa-trash"></i> <!-- Ícone de lixeira -->
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">Nenhum setor registrado</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="text-center">
+        {% if page_obj.has_previous %}
+        <a href="?page={{page_obj.previous_page_number}}"><i class="fas fa-chevron-left"></i></a>
+        {% endif %}
+
+        <span>Pagina:  {{page_obj.number}}</span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{page_obj.next_page_number}}"><i class="fas fa-chevron-right"></i></a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

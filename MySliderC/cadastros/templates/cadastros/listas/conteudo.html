@@ -1,0 +1,90 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+
+{% block conteudo %}
+<h3>Lista de Conteúdos Registrados</h3>
+
+<a href="{% url 'cadastrar-conteudo' %}" class="btn btn-primary btn-sm">Adicionar Novo</a>
+<hr>
+<div class="table-responsive">
+    <table class="table table-striped" id="tabela-conteudo">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Sub Título</th>
+                <th>Descrição</th>
+                <th>Tipo</th>
+             
+                <th>Contém</th>
+                
+                <th>Cadastrado por:</th>
+                <th>Opções</th>
+            </tr>
+        </thead>
+        <!-- percorrer lista de objetos -->
+        <tbody>
+            {% for conteudo in object_list %}
+            <tr>
+                <td> {% if conteudo.tipo == 'video' %}
+                    {{ conteudo.video.title }}
+                    {% else %}
+                    {{ conteudo.imagem.title }}
+                    {% endif %}
+                </td>
+                <td> {% if conteudo.tipo == 'video' %}
+                    {{ conteudo.video.sub_title }}
+                    {% else %}
+                    {{ conteudo.imagem.sub_title }}
+                    {% endif %}
+                </td>
+                <td> {% if conteudo.tipo == 'video' %}
+                    {{ conteudo.video.descricao }}
+                    {% else %}
+                    {{ conteudo.imagem.descricao }}
+                    {% endif %}
+                </td>
+                <td>{{ conteudo.tipo }}</td>
+                <td>
+                    {% if conteudo.tipo == 'video' %}
+                    <a href="{{ conteudo.video.video.url }}"><i class="fas fa-play"></i></a>
+                    {% else %}
+               
+                    
+                    <a href="{{ conteudo.imagem.image.url }}"><i class="fas fa-image"></i></a>
+                    {% endif %}
+                </td>
+               
+                <td> {% if conteudo.tipo == 'video' %}
+                    {{ conteudo.video.usuario.username }}
+                    {% else %}
+                    {{ conteudo.imagem.usuario.username }}
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'upConteudo' conteudo.pk %}" class="btn btn-warning btn-sm" title="Editar">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                    <a href="{% url 'delConteudo' conteudo.pk %}" class="btn btn-danger btn-sm" title="Excluir">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="9">Nenhum conteúdo registrado</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#tabela-conteudo').DataTable({
+            "order": []  // Remova a ordenação padrão se não for necessário
+        });
+    });
+</script>
+{% endblock %}

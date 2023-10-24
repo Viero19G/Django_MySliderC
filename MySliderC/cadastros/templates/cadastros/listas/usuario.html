@@ -1,0 +1,43 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+
+
+{% block conteudo %}
+<h3>Lista de Usuarios Registrados</h3>
+    <a href="{% url 'registrar' %}" class="btn btn-primary btn-sm">Adicionar Novo</a>
+
+<hr>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <tr>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Setor do Usuário</th>
+            <th>opções</th>
+        </tr>
+
+        <!-- percorrer lista de objetos -->
+        {% for usuario in object_list %}
+        <tr>
+            <td>{{ usuario.usrNome }}</td>
+            <td>{{ usuario.usrMail }}</td>
+            <td>{{ usuario.setor.nome }}</td>
+            <td>
+                <a href="{% url 'upUsuario' usuario.pk %}" class="btn btn-warning btn-sm" title="Editar">
+                    <i class="fas fa-pencil-alt"></i> <!-- Ícone de lápis -->
+                </a>
+                <a href="{% url 'delUsuario' usuario.pk %}" class="btn btn-danger btn-sm" title="Excluir">
+                    <i class="fas fa-trash"></i> <!-- Ícone de lixeira -->
+                </a>
+            </td><td> 
+           
+
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">Nenhum usuario registrado</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
