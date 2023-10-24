@@ -1,0 +1,32 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+{% block conteudo %}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+
+        <h3>{{titulo}}</h3>
+        <p class="lead">
+            Preencha todos os campos obrigatórios
+        </p>
+
+        <hr>
+
+        <form action="" method="post">
+
+            {% csrf_token %}
+
+            {{ form|crispy }}
+
+            <p class="lead">
+                Cole o link da planilha que deseja compartilhar:
+            </p>
+            <input type="text" name="planilha_url" placeholder="Cole o link da planilha" required>
+            <button type="submit" class="btn btn-primary">{{botao}}</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

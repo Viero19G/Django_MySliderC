@@ -6,6 +6,8 @@ import os
 from carrosselApp.models import *
 from django.contrib.auth.models import Group, User
 from django.db.models import Q
+from django.contrib import messages
+from integracao.google_sheets_utils import authenticate_google_sheets
 
 
 class SetorCreate(LoginRequiredMixin, CreateView):
@@ -234,4 +236,38 @@ class ImagemCreate(LoginRequiredMixin, CreateView):
 
         context['titulo'] = "Cadastro de Imagem"
         context['botao'] = "Cadastrar"
+        return context
+
+
+class PlanilhaCreateView(CreateView):
+    model = Planilha
+    fields = ['planilha_id', 'title', 'sub_title', 'descricao']  # Campos necessários para criar uma planilha
+    template_name = 'createPlanilha.html'
+
+    def form_valid(self, form):
+        # Autenticação com a API do Google Sheets
+        gc = authenticate_google_sheets()
+
+        # Extrair o ID da planilha a partir da URL
+        planilha_url = form.cleaned_data['planilha_id']  # Suponha que o campo seja chamado 'planilha_id'
+        id_da_planilha = Planilha.extrair_id_da_planilha(planilha_url)  # Chamamos a função da classe Planilha para extrair o ID
+
+        if id_da_planilha:
+            # Compartilhar a planilha com a conta de serviço
+            email_da_conta_de_servico = "integra-o-sheets@meu-primeiro-app-py-planilha.iam.gserviceaccount.com"
+            planilha = gc.open_by_key(id_da_planilha)
+            planilha.share(email_da_conta_de_servico, perm_type="user", role="reader")
+
+            # associar a planilha com o usuário que a compartilhou
+            form.instance.compartilhada_por = self.request.user
+            return super().form_valid(form)
+        else:
+            messages.error(self.request, "Erro ao extrair ID da planilha a partir da URL.")
+            return self.form_invalid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['titulo'] = "Compartilhando Planilha"
+        context['botao'] = "Compartilhar"
         return context
