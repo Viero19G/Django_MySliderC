@@ -29,6 +29,15 @@ class Setor(models.Model):
     def __str__(self):
         return "{} ".format(self.nome)
 
+class Planilha(models.Model):
+    planilha_id = models.CharField(max_length=255, verbose_name='ID da Planilha Google')
+    title = models.CharField(max_length=150, verbose_name='Título')
+    sub_title = models.CharField(max_length=200, verbose_name='Sub-Título')
+    descricao = models.CharField(max_length=200, verbose_name='Descrição')
+    usuario = models.ForeignKey(
+        User, on_delete=models.PROTECT, verbose_name='Usuário', default=None)
+
+
 class Video(models.Model):
     video = models.FileField(
         upload_to='videos/%Y/%m/%d/',
@@ -83,11 +92,14 @@ class Conteudo(models.Model):
     TIPO_CHOICES = (
         ('video', 'Vídeo'),
         ('imagem', 'Imagem'),
+        ('planilha', 'Planilha'),
     )
 
     tipo = models.CharField(max_length=10, null=True, blank=True, choices=TIPO_CHOICES)
     video = models.ForeignKey(Video, on_delete=models.CASCADE, null=True, blank=True)
     imagem = models.ForeignKey(Imagem, on_delete=models.CASCADE, null=True, blank=True)
+    planilha = models.ForeignKey(Planilha, on_delete=models.CASCADE, null=True, blank=True)
+
    
 
 class Grade(models.Model):
