@@ -157,3 +157,26 @@ class ImagemList(LoginRequiredMixin, ListView):
 
         return queryset
     
+
+class PlanilhaList(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
+    model = Planilha
+    template_name = 'cadastros/listas/planilha.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        user = self.request.user
+
+        # Verifique se o usuário pertence aos grupos 'administrador' ou 'marketing'
+        admin_group = Group.objects.get(name='administrador')
+        marketing_group = Group.objects.get(name='marketing')
+
+        if user.groups.filter(Q(name='administrador') | Q(name='marketing')).exists():
+            # Se o usuário pertencer a qualquer um dos grupos, mostre todo o conteúdo
+            queryset = Planilha.objects.all()
+        else:
+            # Se não pertencer a nenhum desses grupos, liste apenas o conteúdo do próprio usuário
+            queryset = Planilha.objects.filter(usuario=user)
+
+        return queryset
+    

@@ -50,6 +50,6 @@ urlpatterns = [
     path('editar/imagem/<int:pk>/', ImagemUpdate.as_view(), name='upImagem'),
 
    # operações para planilha
-    path('criar_planilha/', PlanilhaCreateView.as_view(), name='cadastrar_planilha'),
+    path('criar_planilha/', PlanilhaCreateView.as_view(), name='cadastrar-planilha'),
 
 ]

@@ -37,8 +37,6 @@ class Planilha(models.Model):
     descricao = models.CharField(max_length=200, verbose_name='Descrição')
     usuario = models.ForeignKey(
         User, on_delete=models.PROTECT, verbose_name='Usuário', default=None)
-    compartilhada_por = models.ForeignKey(
-        User, on_delete=models.PROTECT, related_name='planilhas_compartilhadas', verbose_name='Compartilhada por', null=True)
     
     
     def extrair_id_da_planilha(url):
