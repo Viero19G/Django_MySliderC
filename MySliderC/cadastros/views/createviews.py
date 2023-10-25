@@ -251,7 +251,7 @@ class PlanilhaCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
 
         # Extrair o link da planilha a partir do formulário
-        planilha_url = form.cleaned_data['planilha_url']
+        planilha_url = Planilha.extrair_id_da_planilha(form.cleaned_data['planilha_url'])
 
         if planilha_url:
             # Atribuir o usuário atual ao campo usuario

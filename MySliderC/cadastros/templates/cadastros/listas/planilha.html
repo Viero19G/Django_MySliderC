@@ -1,0 +1,61 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+
+{% block conteudo %}
+<h3>Lista de Conteúdos Registrados</h3>
+
+<a href="{% url 'cadastrar-planilha' %}" class="btn btn-primary btn-sm">Adicionar Novo</a>
+<hr>
+<div class="table-responsive">
+    <table class="table table-striped" id="tabela-conteudo">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Descrição</th>
+                <th>Criado por:</th>
+                <th>Opções</th>
+            </tr>
+        </thead>
+        <!-- percorrer lista de objetos -->
+        <tbody>
+            {% for planilha in object_list %}
+            <tr>
+                <td> {{planilha.title}}</td>
+                <td> {{planilha.descricao}}</td>
+                <td>{{ planilha.usuario.username }}</td>
+               
+            
+            
+               
+               
+                <td>
+                    <a href="#" class="btn btn-warning btn-sm" title="Editar">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                    <a href="#" class="btn btn-danger btn-sm" title="Excluir">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                    <a href="{% url 'verPlanilha' planilha.pk %}" class="btn btn-info btn-sm" title="Ver Detalhes">
+                        <i class="fas fa-eye"></i> <!-- Ícone de olho -->
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="9">Nenhum conteúdo registrado</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#tabela-conteudo').DataTable({
+            "order": []  // Remova a ordenação padrão se não for necessário
+        });
+    });
+</script>
+{% endblock %}

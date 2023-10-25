@@ -6,17 +6,19 @@ from cadastros.views.upviews import *
 # importando views de delete
 from cadastros.views.deleteviews import *
 # Importando view para listar
-from cadastros.views.listviews import * 
-
+from cadastros.views.listviews import *
 
 
 urlpatterns = [
     # Para verGrade
     path('ver_grade/<int:grade_id>/', GradeList.ver_grade, name='verGrade'),
-
     #  Para verCarrossel
     path('ver_Carrossel/<int:grade_id>/',
          GradeList.ver_carrossel, name='verCarrossel'),
+    # Para verPlanilha
+     path('ver_Planilha/<int:pk>/',
+          PlanilhaList.ver_planilha, name='verPlanilha'),
+
 
     # operações para Grade
     path('editar/grade/<int:pk>/', GradeUpdate.as_view(), name='upGrade'),
@@ -49,7 +51,8 @@ urlpatterns = [
     path('listar/imagem/', ImagemList.as_view(), name='listImagem'),
     path('editar/imagem/<int:pk>/', ImagemUpdate.as_view(), name='upImagem'),
 
-   # operações para planilha
-    path('criar_planilha/', PlanilhaCreateView.as_view(), name='cadastrar-planilha'),
+    # operações para planilha
+    path('planilha/', PlanilhaCreateView.as_view(), name='cadastrar-planilha'),
+    path('listar/planilha/', PlanilhaList.as_view(), name='listPlanilha'),
 
 ]

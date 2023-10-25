@@ -1,0 +1,31 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block conteudo %}
+  <h2>Detalhes da Planilha</h2>
+  <p>Título: {{ planilha.title }}</p>
+  <p>Subtítulo: {{ planilha.sub_title }}</p>
+  <p>Descrição: {{ planilha.descricao }}</p>
+  
+  {% for aba in abas %}
+  <h3>{{ aba.title }}</h3>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        {% if aba.get_all_values %}
+          {% with data=aba.get_all_values %}
+            {% for row in data %}
+              <tr>
+                {% for cell in row %}
+                  <td>{{ cell }}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          {% endwith %}
+        {% endif %}
+      </tr>
+    </thead>
+  </table>
+{% endfor %}
+{% endblock %}

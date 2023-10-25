@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'cadastros.apps.CadastrosConfig',
     'usuarios.apps.UsuariosConfig',
     'permissoes.apps.PermissoesConfig',
+    'integracao.apps.IntegracaoConfig',
     'django.contrib.sites',
 
     # abordagem para google

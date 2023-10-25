@@ -5,9 +5,9 @@ from django.contrib.auth.models import User, Group
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-
+import gspread
 from django.shortcuts import render
-
+from integracao.google_sheets_utils import authenticate_google_sheets
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -180,3 +180,29 @@ class PlanilhaList(LoginRequiredMixin, ListView):
 
         return queryset
     
+    @login_required(login_url='login')  # Usar o decorator login_required para exigir autenticação
+    def ver_planilha(request, pk):
+        # Busque a planilha no banco de dados usando a PK
+        planilha = get_object_or_404(Planilha, pk=pk)
+        
+        # Autentique-se na API do Google Sheets
+        gc = authenticate_google_sheets()  # Certifique-se de implementar essa função
+        
+        # Abra a planilha usando o ID da planilha armazenado no banco de dados
+        try:
+            planilha_google = gc.open_by_key(planilha.planilha_id)
+            # Agora você pode acessar os dados da planilha
+            # Por exemplo, você pode obter todas as abas da planilha
+            abas = planilha_google.worksheets()
+        except gspread.exceptions.APIError as e:
+            # Trate erros de autenticação ou planilha inacessível
+            return render(request, 'erro.html', {'mensagem': 'Erro ao acessar a planilha'})
+        
+        # Adicione mensagens de depuração
+        for aba in abas:
+            print(f"Nome da aba: {aba.title}")
+            data = aba.get_all_values()
+            print(f"Dados da aba: {data}")
+
+        return render(request, 'ver/verPlanilha.html', {'planilha': planilha, 'abas': abas})
+
