@@ -188,3 +188,10 @@ LOGIN_URL = 'login'
 # Constante de Grupos
 # define arquivo onde serão criadas as permissões
 ROLEPERMISSIONS_MODULE = 'permissoes.roles'
+
+
+# Caminho para o diretório de imagens dos gráficos
+GRAFICOS_DIR = os.path.join(BASE_DIR, 'pics', 'grafico')
+
+# Certifique-se de que o diretório exista
+os.makedirs(GRAFICOS_DIR, exist_ok=True)

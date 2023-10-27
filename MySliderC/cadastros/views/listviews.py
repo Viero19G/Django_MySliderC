@@ -1,14 +1,18 @@
-from django.views.generic.list import ListView   ##### views para listar
-from carrosselApp.models import *
-from django.urls import reverse_lazy
-from django.contrib.auth.models import User, Group
-from django.db.models import Q
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import login_required
 import gspread
+import base64
+
 from django.shortcuts import render
-from integracao.google_sheets_utils import authenticate_google_sheets
+from django.shortcuts import render, get_object_or_404
+from django.views.generic.list import ListView
+from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
+from django.contrib.auth.models import User, Group
+from carrosselApp.models import Planilha
+from carrosselApp.models import *
+from integracao.google_sheets_utils import authenticate_google_sheets
+
 
 
 
@@ -180,29 +184,35 @@ class PlanilhaList(LoginRequiredMixin, ListView):
 
         return queryset
     
-    @login_required(login_url='login')  # Usar o decorator login_required para exigir autenticação
+    @login_required(login_url='login')
     def ver_planilha(request, pk):
-        # Busque a planilha no banco de dados usando a PK
         planilha = get_object_or_404(Planilha, pk=pk)
-        
-        # Autentique-se na API do Google Sheets
-        gc = authenticate_google_sheets()  # Certifique-se de implementar essa função
-        
-        # Abra a planilha usando o ID da planilha armazenado no banco de dados
+
+        gc = authenticate_google_sheets()
+
         try:
             planilha_google = gc.open_by_key(planilha.planilha_id)
-            # Agora você pode acessar os dados da planilha
-            # Por exemplo, você pode obter todas as abas da planilha
             abas = planilha_google.worksheets()
         except gspread.exceptions.APIError as e:
-            # Trate erros de autenticação ou planilha inacessível
             return render(request, 'erro.html', {'mensagem': 'Erro ao acessar a planilha'})
-        
-        # Adicione mensagens de depuração
+
+         # Lista para armazenar informações sobre as abas, incluindo gráficos
+        abas_info = []
+
         for aba in abas:
-            print(f"Nome da aba: {aba.title}")
+            # Obtém os dados da aba
             data = aba.get_all_values()
-            print(f"Dados da aba: {data}")
 
-        return render(request, 'ver/verPlanilha.html', {'planilha': planilha, 'abas': abas})
+            # Obtém gráficos (ou qualquer outra informação que você deseja) da aba
+            graficos = []
 
+            # Você pode adicionar aqui a lógica para obter informações específicas dos gráficos, se necessário
+
+            # Adiciona informações da aba (incluindo gráficos) à lista abas_info
+            abas_info.append({
+                'aba': aba,
+                'data': data,
+                'graficos': graficos
+            })
+            print(abas_info)
+        return render(request, 'ver/verPlanilha.html', {'planilha': planilha, 'abas_info': abas_info})

@@ -7,25 +7,29 @@
   <p>Título: {{ planilha.title }}</p>
   <p>Subtítulo: {{ planilha.sub_title }}</p>
   <p>Descrição: {{ planilha.descricao }}</p>
-  
+
+  {% if grafico %}
+    <img src="{{ grafico }}" alt="Gráfico">
+  {% endif %}
+
   {% for aba in abas %}
-  <h3>{{ aba.title }}</h3>
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        {% if aba.get_all_values %}
-          {% with data=aba.get_all_values %}
-            {% for row in data %}
-              <tr>
-                {% for cell in row %}
-                  <td>{{ cell }}</td>
-                {% endfor %}
-              </tr>
-            {% endfor %}
-          {% endwith %}
-        {% endif %}
-      </tr>
-    </thead>
-  </table>
-{% endfor %}
+    <h3>{{ aba.title }}</h3>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          {% if aba.get_all_values %}
+            {% with data=aba.get_all_values %}
+              {% for row in data %}
+                <tr>
+                  {% for cell in row %}
+                    <td>{{ cell }}</td>
+                  {% endfor %}
+                </tr>
+              {% endfor %}
+            {% endwith %}
+          {% endif %}
+        </tr>
+      </thead>
+    </table>
+  {% endfor %}
 {% endblock %}

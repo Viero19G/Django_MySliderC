@@ -37,7 +37,7 @@ class Planilha(models.Model):
     descricao = models.CharField(max_length=200, verbose_name='Descrição')
     usuario = models.ForeignKey(
         User, on_delete=models.PROTECT, verbose_name='Usuário', default=None)
-    
+    tempo = models.PositiveBigIntegerField(blank=True, null=True)
     
     def extrair_id_da_planilha(url):
         # Padrão de expressão regular para encontrar o ID da planilha
@@ -52,7 +52,17 @@ class Planilha(models.Model):
 
         # Se não houver correspondência, retorne None para indicar que o ID não pôde ser encontrado
         return None
+    
+class Grafico(models.Model):
+    image =  models.FileField(
+        upload_to='graficos/%Y/%m/%d/',
+        verbose_name='Imagem',
+        validators=[validate_image_extension])
+    descricao = models.CharField(max_length=200, verbose_name='Descrição')
 
+class GraficoPlanilha(models.Model):
+    planilha = models.ForeignKey(Planilha, on_delete=models.PROTECT)
+    grafico = models.ForeignKey(Grafico, on_delete=models.CASCADE)
 
 
 class Video(models.Model):

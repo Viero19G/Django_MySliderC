@@ -2,6 +2,14 @@
 {% load static %}
 
 {% block conteudo %}
+<style>
+    /* Estilos para a área de seleção */
+    .selecao {
+        position: absolute;
+        border: 2px dashed #000;
+        pointer-events: none;
+    }
+</style>
 <h3>Lista de Conteúdos Registrados</h3>
 
 <a href="{% url 'cadastrar-planilha' %}" class="btn btn-primary btn-sm">Adicionar Novo</a>
@@ -48,6 +56,8 @@
         </tbody>
     </table>
 </div>
+
+<iframe src="https://docs.google.com/spreadsheets/d/1LvYC5bapUbCmnwJ5dFgroXmnA-Jx-xtnvz35Kkj_iOQ/edit?usp=sharing&headers=false" width="100%" height="500" frameborder="0" marginheight="0" marginwidth="0">Carregando…</iframe>
 {% endblock %}
 
 {% block scripts %}
