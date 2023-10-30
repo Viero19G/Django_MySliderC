@@ -204,7 +204,7 @@ class PlanilhaList(LoginRequiredMixin, ListView):
             data = aba.get_all_values()
 
             # Obtém gráficos (ou qualquer outra informação que você deseja) da aba
-            graficos = []
+            graficos = aba.get_all_cells()
 
             # Você pode adicionar aqui a lógica para obter informações específicas dos gráficos, se necessário
 

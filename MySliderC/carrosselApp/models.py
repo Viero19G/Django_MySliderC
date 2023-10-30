@@ -2,7 +2,11 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user
+from integracao.google_sheets_utils import authenticate_google_sheets
+import requests
+from django.http import JsonResponse
 import re
+
 
 # Classes e modelos para a construção de todo o projeto
 # associados ao banco de dados com os comandos _py manage.py makemigrations
@@ -52,6 +56,32 @@ class Planilha(models.Model):
 
         # Se não houver correspondência, retorne None para indicar que o ID não pôde ser encontrado
         return None
+    def verificar_e_baixar_imagens(request, planilha_id):
+        # Autenticação 
+        gc = authenticate_google_sheets()
+
+        # URL da API executável no GCP
+        api_url = "https://script.googleapis.com/v1/scripts/AKfycbyBWK_7ctCyvTWYEOhi9YtAx12ATJDtSjO4NXDbDS0-asSYVe2b0uns9hxsKJCuHPI:run"
+
+        # Parâmetros a serem enviados para a API
+        parametros = {
+            "planilhaId": planilha_id
+        }
+        # Faça a solicitação para a API
+        print(f"planilha_id: {planilha_id}")
+        response = requests.post(api_url, json=parametros)
+        print(f"Response content: {response.content}")
+        breakpoint()
+        if response.status_code == 200:
+            breakpoint()
+        # Processar a resposta da função do Google Apps Script
+            imagens = response.json()
+            print(imagens)
+            breakpoint()
+            return imagens
+        else:
+            # Lidar com erros, se houver
+            return None
     
 class Grafico(models.Model):
     image =  models.FileField(

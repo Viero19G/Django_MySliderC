@@ -259,11 +259,16 @@ class PlanilhaCreateView(LoginRequiredMixin, CreateView):
 
             # Armazenar o link da planilha no banco de dados
             form.instance.planilha_id = planilha_url
-
+            print(form.instance.planilha_id) 
+            Planilha_Id = form.instance.planilha_id
+            teste = Planilha.verificar_e_baixar_imagens(self.request, Planilha_Id)
+            print(teste)
+            breakpoint()
             return super().form_valid(form)
         else:
             messages.error(self.request, "Erro ao extrair link da planilha.")
             return self.form_invalid(form)
+        
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
