@@ -9,6 +9,9 @@ from django.contrib.auth.models import Group, User
 from django.db.models import Q
 from django.contrib import messages
 from integracao.google_sheets_utils import authenticate_google_sheets
+from django.core.files.base import ContentFile
+import gdown
+from django.utils import timezone
 
 
 class SetorCreate(LoginRequiredMixin, CreateView):
@@ -247,11 +250,10 @@ class PlanilhaCreateView(LoginRequiredMixin, CreateView):
     template_name = 'cadastros/createPlanilha.html'
     success_url = reverse_lazy('listPlanilha')
 
-
     def form_valid(self, form):
-
         # Extrair o link da planilha a partir do formulário
-        planilha_url = Planilha.extrair_id_da_planilha(form.cleaned_data['planilha_url'])
+        planilha_url = Planilha.extrair_id_da_planilha(
+            form.cleaned_data['planilha_url'])
 
         if planilha_url:
             # Atribuir o usuário atual ao campo usuario
@@ -259,16 +261,66 @@ class PlanilhaCreateView(LoginRequiredMixin, CreateView):
 
             # Armazenar o link da planilha no banco de dados
             form.instance.planilha_id = planilha_url
-            print(form.instance.planilha_id) 
             Planilha_Id = form.instance.planilha_id
-            teste = Planilha.verificar_e_baixar_imagens(self.request, Planilha_Id)
-            print(teste)
+
+            # Autenticar e obter token
+            gc, access_token = authenticate_google_sheets()
+
+            # Salvar a Planilha fora do loop de imagens
+            verifica_graficos = Planilha.obter_links_de_download(
+                access_token, Planilha_Id)
+            print("Verificação de gráficos:", verifica_graficos)
             breakpoint()
+
+            # Se "imagens" estiver presente e não vazio, processar as imagens
+            if "imagens" in verifica_graficos and verifica_graficos["imagens"]:
+                self.processar_imagens(verifica_graficos["imagens"], gc)
+
+            else:
+                messages.warning(
+                    self.request, "Nenhum gráfico presente nessa planilha.")
+                # Não há imagens, mas salva a planilha
+                return super().form_valid(form)
+
             return super().form_valid(form)
         else:
             messages.error(self.request, "Erro ao extrair link da planilha.")
             return self.form_invalid(form)
-        
+
+    def processar_imagens(self, imagens, gc):
+        for imagem_url in imagens:
+            filename = self.obter_nome_do_arquivo(imagem_url)
+            output_path = Planilha.upload_to_path(self, filename)
+            print("Salvando em:", output_path)
+            breakpoint()
+
+            # Certifique-se de que o diretório existe
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+            # Fazer o download da imagem usando gdown
+            imagem_url_com_token = f"{imagem_url}&access_token={gc.auth.access_token}"
+            Planilha.alterar_configuracoes_compartilhamento(imagem_url)
+            gdown.download(imagem_url_com_token, output_path, quiet=False)
+            print("Download concluído")
+            breakpoint()
+
+            # Criar um objeto Grafico
+            grafico = Grafico()
+            grafico.descricao = "Automatizado"
+
+            # Salvar a imagem no objeto Grafico
+            with open(output_path, 'rb') as f:
+                grafico.image.save(filename, ContentFile(f.read()), save=True)
+
+            # Criar a relação GraficoPlanilha
+            grafico_planilha = GraficoPlanilha(planilha=self, grafico=grafico)
+            grafico_planilha.save()
+
+    def obter_nome_do_arquivo(self, imagem_url):
+        # Usar split para obter o nome do arquivo da URL
+        filename = imagem_url.split("/")[-1].split("?")[0]
+        # Certificar-se de que o nome do arquivo não contém caracteres inválidos
+        return re.sub(r"[^a-zA-Z0-9_.-]", "_", filename)
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)

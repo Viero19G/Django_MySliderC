@@ -3,15 +3,17 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user
 from integracao.google_sheets_utils import authenticate_google_sheets
+from googleapiclient.discovery import build
 import requests
-from django.http import JsonResponse
 import re
-
+from django.utils import timezone
+import os
 
 # Classes e modelos para a construção de todo o projeto
 # associados ao banco de dados com os comandos _py manage.py makemigrations
 # e py manage.py migrate _ após esses comandos os models são incorporados ao
 # SQLite.
+
 
 def validate_video_extension(value):
     allowed_extensions = ['mp4', 'avi', 'mkv', 'mov']
@@ -20,29 +22,36 @@ def validate_video_extension(value):
         raise ValidationError(
             'Somente vídeos MP4, AVI, MKV e MOV são permitidos.')
 
+
 def validate_image_extension(value):
     allowed_extensions = ['jpg', 'jpeg', 'png', 'gif']
     extension = value.name.split('.')[-1].lower()
     if extension not in allowed_extensions:
-        raise ValidationError('Somente imagens JPG, JPEG, PNG e GIF são permitidas.')
+        raise ValidationError(
+            'Somente imagens JPG, JPEG, PNG e GIF são permitidas.')
 
-class Setor(models.Model): 
-    usuario = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Usuário', default=None)
+
+class Setor(models.Model):
+    usuario = models.ForeignKey(
+        User, on_delete=models.PROTECT, verbose_name='Usuário', default=None)
     nome = models.CharField(max_length=180, verbose_name='Nome do SETOR')
-    membros = models.ManyToManyField(User, related_name='setores_membros', blank=True, verbose_name='Selecione os Membros do Setor')
+    membros = models.ManyToManyField(
+        User, related_name='setores_membros', blank=True, verbose_name='Selecione os Membros do Setor')
 
     def __str__(self):
         return "{} ".format(self.nome)
 
+
 class Planilha(models.Model):
-    planilha_id = models.CharField(max_length=255, verbose_name='ID da Planilha Google')
+    planilha_id = models.CharField(
+        max_length=255, verbose_name='ID da Planilha Google')
     title = models.CharField(max_length=150, verbose_name='Título')
     sub_title = models.CharField(max_length=200, verbose_name='Sub-Título')
     descricao = models.CharField(max_length=200, verbose_name='Descrição')
     usuario = models.ForeignKey(
         User, on_delete=models.PROTECT, verbose_name='Usuário', default=None)
     tempo = models.PositiveBigIntegerField(blank=True, null=True)
-    
+
     def extrair_id_da_planilha(url):
         # Padrão de expressão regular para encontrar o ID da planilha
         padrao = r"/d/([a-zA-Z0-9-_]+)"
@@ -56,39 +65,83 @@ class Planilha(models.Model):
 
         # Se não houver correspondência, retorne None para indicar que o ID não pôde ser encontrado
         return None
-    def verificar_e_baixar_imagens(request, planilha_id):
-        # Autenticação 
-        gc = authenticate_google_sheets()
 
-        # URL da API executável no GCP
-        api_url = "https://script.googleapis.com/v1/scripts/AKfycbyBWK_7ctCyvTWYEOhi9YtAx12ATJDtSjO4NXDbDS0-asSYVe2b0uns9hxsKJCuHPI:run"
-
-        # Parâmetros a serem enviados para a API
-        parametros = {
-            "planilhaId": planilha_id
+    def obter_links_de_download(token, planilha_id):
+        headers = {
+            "Accept": "application/json",
+            "Authorization": f"Bearer {token}"
         }
-        # Faça a solicitação para a API
-        print(f"planilha_id: {planilha_id}")
-        response = requests.post(api_url, json=parametros)
-        print(f"Response content: {response.content}")
+       # Parâmetros a serem enviados na solicitação
+        params = {
+            "action": "verificarEConverterGraficos",
+            "planilhaId": planilha_id  # Substitua pela ID da sua planilha
+        }
+        gc = authenticate_google_sheets()
+        apps_script_url = "https://script.google.com/macros/s/AKfycbx9yu7yK-nDY5KhTmZyTGLxyf8mpEDImSNwXRyxUnw5VpOX_srd2dJV4YmTjp8twupM/exec"
+        # Simule uma solicitação GET para a API
+        response = requests.get(
+            apps_script_url, params=params, headers=headers)
+        while True:
+            # Faça a solicitação GET para a URL original
+            response = requests.get(
+                apps_script_url, params=params, headers=headers)
+            # Verifique se a resposta contém um URL de redirecionamento
+            if response.status_code == 302:
+                # URL de redirecionamento
+                apps_script_url = response.headers['Location']
+            else:
+                # Se não houver redirecionamento, a resposta contém o JSON desejado
+                try:
+                    data = response.json()
+
+                    return data
+                except ValueError as e:
+                    # A resposta não é um JSON válido
+                    print(f"Erro ao analisar JSON: {e}")
+                    print(f"Resposta: {response.text}")
+                    breakpoint()
+
+    # define para onde sera o UpLoad dos arquivos
+    def upload_to_path(instance, filename):
+        # Gera o caminho de upload dinâmico
+        return os.path.join(
+            'graficos',
+            timezone.now().strftime('%Y/%m/%d'),
+            filename
+        )
+
+    # Usadda para alterar as configurações de compartilhamento das imagens criadas pelo apps scripts
+    def alterar_configuracoes_compartilhamento(self, imagem_url):
+        # Obtenha as credenciais e crie uma instância do serviço Google Drive
+        creds, token = authenticate_google_sheets()
+        drive_service = build('drive', 'v3', credentials=creds)
+
+        # Extraia o ID do arquivo da imagem URL
+        file_id = imagem_url.split('=')[1]
+
+        # Defina as configurações de compartilhamento desejadas
+        permissions = {
+            'role': 'writer',  # Permite edição
+            'type': 'anyone',
+        }
+
+        # Atualize as permissões do arquivo
+        drive_service.permissions().create(
+            fileId=file_id,
+            body=permissions,
+        ).execute()
+
+        print(f"Configurações de compartilhamento alteradas para {imagem_url}")
         breakpoint()
-        if response.status_code == 200:
-            breakpoint()
-        # Processar a resposta da função do Google Apps Script
-            imagens = response.json()
-            print(imagens)
-            breakpoint()
-            return imagens
-        else:
-            # Lidar com erros, se houver
-            return None
-    
+
+
 class Grafico(models.Model):
-    image =  models.FileField(
-        upload_to='graficos/%Y/%m/%d/',
+    image = models.FileField(
+        upload_to=Planilha.upload_to_path,
         verbose_name='Imagem',
         validators=[validate_image_extension])
     descricao = models.CharField(max_length=200, verbose_name='Descrição')
+
 
 class GraficoPlanilha(models.Model):
     planilha = models.ForeignKey(Planilha, on_delete=models.PROTECT)
@@ -120,6 +173,7 @@ class Video(models.Model):
     def __str__(self):
         return "{} ({})".format(self.title, self.sub_title)
 
+
 class Imagem(models.Model):
     image = models.FileField(
         upload_to='pics/%Y/%m/%d/',
@@ -145,6 +199,7 @@ class Imagem(models.Model):
     def __str__(self):
         return "{} ({})".format(self.title, self.sub_title)
 
+
 class Conteudo(models.Model):
     TIPO_CHOICES = (
         ('video', 'Vídeo'),
@@ -152,20 +207,27 @@ class Conteudo(models.Model):
         ('planilha', 'Planilha'),
     )
 
-    tipo = models.CharField(max_length=10, null=True, blank=True, choices=TIPO_CHOICES)
-    video = models.ForeignKey(Video, on_delete=models.CASCADE, null=True, blank=True)
-    imagem = models.ForeignKey(Imagem, on_delete=models.CASCADE, null=True, blank=True)
-    planilha = models.ForeignKey(Planilha, on_delete=models.CASCADE, null=True, blank=True)
+    tipo = models.CharField(max_length=10, null=True,
+                            blank=True, choices=TIPO_CHOICES)
+    video = models.ForeignKey(
+        Video, on_delete=models.CASCADE, null=True, blank=True)
+    imagem = models.ForeignKey(
+        Imagem, on_delete=models.CASCADE, null=True, blank=True)
+    planilha = models.ForeignKey(
+        Planilha, on_delete=models.CASCADE, null=True, blank=True)
 
-   
 
 class Grade(models.Model):
-    setor = models.ManyToManyField(Setor, related_name='grades_editadas', blank=True, verbose_name='Setores Onde Aparecerá')
-    conteudo = models.ManyToManyField(Conteudo, blank=True, verbose_name='Conteúdo')
+    setor = models.ManyToManyField(
+        Setor, related_name='grades_editadas', blank=True, verbose_name='Setores Onde Aparecerá')
+    conteudo = models.ManyToManyField(
+        Conteudo, blank=True, verbose_name='Conteúdo')
     title = models.CharField(max_length=150, verbose_name='Título')
     sub_title = models.CharField(max_length=200, verbose_name='Sub-Título')
-    usuario = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Usuário', default=None)
-    usuariosEdit = models.ManyToManyField(User, related_name='grades_editadas', blank=True, verbose_name='Editores de Grade')
+    usuario = models.ForeignKey(
+        User, on_delete=models.PROTECT, verbose_name='Usuário', default=None)
+    usuariosEdit = models.ManyToManyField(
+        User, related_name='grades_editadas', blank=True, verbose_name='Editores de Grade')
 
     def __str__(self):
         return "{} ({})".format(self.title, ', '.join([str(c) for c in self.conteudo.all()]))
