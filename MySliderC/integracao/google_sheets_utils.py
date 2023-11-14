@@ -30,7 +30,7 @@ def authenticate_google_sheets():
     credenciais_json = "credenciais.json"
     credentials = service_account.Credentials.from_service_account_file(
         credenciais_json,
-        scopes=['https://www.googleapis.com/auth/drive']
+        scopes=['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.file','https://www.googleapis.com/auth/drive.readonly']
     )
     # Autentique-se com o cliente gspread
     gc = gspread.authorize(credentials)
@@ -39,4 +39,4 @@ def authenticate_google_sheets():
     credentials.refresh(requests.Request())
     access_token = credentials.token
 
-    return gc, access_token
+    return credentials, access_token

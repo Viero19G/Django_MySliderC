@@ -270,11 +270,10 @@ class PlanilhaCreateView(LoginRequiredMixin, CreateView):
             verifica_graficos = Planilha.obter_links_de_download(
                 access_token, Planilha_Id)
             print("Verificação de gráficos:", verifica_graficos)
-            breakpoint()
 
             # Se "imagens" estiver presente e não vazio, processar as imagens
             if "imagens" in verifica_graficos and verifica_graficos["imagens"]:
-                self.processar_imagens(verifica_graficos["imagens"], gc)
+                self.processar_imagens(verifica_graficos["imagens"], access_token)
 
             else:
                 messages.warning(
@@ -287,7 +286,7 @@ class PlanilhaCreateView(LoginRequiredMixin, CreateView):
             messages.error(self.request, "Erro ao extrair link da planilha.")
             return self.form_invalid(form)
 
-    def processar_imagens(self, imagens, gc):
+    def processar_imagens(self, imagens, access_token):
         for imagem_url in imagens:
             filename = self.obter_nome_do_arquivo(imagem_url)
             output_path = Planilha.upload_to_path(self, filename)
@@ -298,7 +297,7 @@ class PlanilhaCreateView(LoginRequiredMixin, CreateView):
             os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
             # Fazer o download da imagem usando gdown
-            imagem_url_com_token = f"{imagem_url}&access_token={gc.auth.access_token}"
+            imagem_url_com_token = f"{imagem_url}&access_token={access_token}"
             Planilha.alterar_configuracoes_compartilhamento(imagem_url)
             gdown.download(imagem_url_com_token, output_path, quiet=False)
             print("Download concluído")
