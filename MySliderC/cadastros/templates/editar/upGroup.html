@@ -1,7 +1,7 @@
 {% extends 'paginas/modelo.html' %}
 {% load static %}
 
-{% block content %}
+{% block conteudo %}
   <h1>Editar Grupo: {{ grupo.name }}</h1>
   <form method="post">
     {% csrf_token %}

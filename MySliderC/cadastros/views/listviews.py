@@ -14,13 +14,10 @@ from carrosselApp.models import *
 from integracao.google_sheets_utils import authenticate_google_sheets
 
 
-
-
 class SetorList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Setor
     template_name = 'cadastros/listas/setor.html'
-    paginate_by = 10
 
     def get_queryset(self):
         user = self.request.user
@@ -38,11 +35,11 @@ class SetorList(LoginRequiredMixin, ListView):
 
         return queryset
 
+
 class GradeList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Grade
     template_name = 'cadastros/listas/grade.html'
-    paginate_by = 10
 
     def get_queryset(self):
         user = self.request.user
@@ -69,8 +66,9 @@ class GradeList(LoginRequiredMixin, ListView):
                 queryset = Grade.objects.none()
 
         return queryset
-   
-    @login_required(login_url='login')  # Usar o decorator login_required para exigir autenticação
+
+    # Usar o decorator login_required para exigir autenticação
+    @login_required(login_url='login')
     def ver_grade(request, grade_id):
         grade = get_object_or_404(Grade, pk=grade_id)
 
@@ -79,10 +77,11 @@ class GradeList(LoginRequiredMixin, ListView):
             return render(request, 'ver/verGrade.html', {'grade': grade})
         else:
             # O usuário não tem permissão para visualizar esta grade
-           
-            return render(request, 'falha') 
 
-    @login_required(login_url='login')  # Usar o decorator login_required para exigir autenticação
+            return render(request, 'falha')
+
+    # Usar o decorator login_required para exigir autenticação
+    @login_required(login_url='login')
     def ver_carrossel(request, grade_id):
         grade = get_object_or_404(Grade, pk=grade_id)
 
@@ -91,15 +90,14 @@ class GradeList(LoginRequiredMixin, ListView):
             return render(request, 'ver/verCarrossel.html', {'grade': grade})
         else:
             # O usuário não tem permissão para visualizar este carrossel
-           
-            return render(request, 'falha') 
-        
+
+            return render(request, 'falha')
+
 
 class ConteudoList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Conteudo
     template_name = 'cadastros/listas/conteudo.html'
-    paginate_by = 10
 
     def get_queryset(self):
         user = self.request.user
@@ -117,11 +115,11 @@ class ConteudoList(LoginRequiredMixin, ListView):
 
         return queryset
 
+
 class VideoList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Video
     template_name = 'cadastros/listas/video.html'
-    paginate_by = 10
 
     def get_queryset(self):
         user = self.request.user
@@ -138,12 +136,12 @@ class VideoList(LoginRequiredMixin, ListView):
             queryset = Video.objects.filter(usuario=user)
 
         return queryset
-    
+
+
 class ImagemList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Imagem
     template_name = 'cadastros/listas/imagem.html'
-    paginate_by = 10
 
     def get_queryset(self):
         user = self.request.user
@@ -160,13 +158,12 @@ class ImagemList(LoginRequiredMixin, ListView):
             queryset = Imagem.objects.filter(usuario=user)
 
         return queryset
-    
+
 
 class PlanilhaList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Planilha
     template_name = 'cadastros/listas/planilha.html'
-    paginate_by = 10
 
     def get_queryset(self):
         user = self.request.user
@@ -188,7 +185,7 @@ class PlanilhaList(LoginRequiredMixin, ListView):
     def ver_planilha(request, pk):
         planilha = get_object_or_404(Planilha, pk=pk)
 
-        gc = authenticate_google_sheets()
+        gc, token = authenticate_google_sheets()
 
         try:
             planilha_google = gc.open_by_key(planilha.planilha_id)
@@ -196,23 +193,21 @@ class PlanilhaList(LoginRequiredMixin, ListView):
         except gspread.exceptions.APIError as e:
             return render(request, 'erro.html', {'mensagem': 'Erro ao acessar a planilha'})
 
-         # Lista para armazenar informações sobre as abas, incluindo gráficos
+        # Lista para armazenar informações sobre as abas
         abas_info = []
 
         for aba in abas:
-            # Obtém os dados da aba
+            # Obtém os dados da aba, incluindo apenas as linhas e colunas que contêm valores
             data = aba.get_all_values()
 
-            # Obtém gráficos (ou qualquer outra informação que você deseja) da aba
-            graficos = aba.get_all_cells()
+            # Remove as linhas e colunas que contêm apenas valores vazios
+            data = [[value for value in row] for row in data if any(value.strip() for value in row)]
 
-            # Você pode adicionar aqui a lógica para obter informações específicas dos gráficos, se necessário
-
-            # Adiciona informações da aba (incluindo gráficos) à lista abas_info
+            # Adiciona informações da aba à lista abas_info
             abas_info.append({
                 'aba': aba,
-                'data': data,
-                'graficos': graficos
+                'data': data
             })
             print(abas_info)
+
         return render(request, 'ver/verPlanilha.html', {'planilha': planilha, 'abas_info': abas_info})

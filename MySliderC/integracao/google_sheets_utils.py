@@ -25,6 +25,7 @@ def authenticate_google_sheets_token():
         return None
 
 
+
 def authenticate_google_sheets():
     # Carregue as credenciais OAuth 2 a partir de um arquivo JSON
     credenciais_json = "credenciais.json"
@@ -39,4 +40,4 @@ def authenticate_google_sheets():
     credentials.refresh(requests.Request())
     access_token = credentials.token
 
-    return credentials, access_token
+    return gc, access_token

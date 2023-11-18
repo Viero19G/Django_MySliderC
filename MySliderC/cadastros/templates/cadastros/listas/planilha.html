@@ -31,16 +31,11 @@
                 <td> {{planilha.title}}</td>
                 <td> {{planilha.descricao}}</td>
                 <td>{{ planilha.usuario.username }}</td>
-               
-            
-            
-               
-               
                 <td>
-                    <a href="#" class="btn btn-warning btn-sm" title="Editar">
+                    <a href="{% url 'upPlanilha' planilha.pk %}" class="btn btn-warning btn-sm" title="Editar">
                         <i class="fas fa-pencil-alt"></i>
                     </a>
-                    <a href="#" class="btn btn-danger btn-sm" title="Excluir">
+                    <a href="{% url 'delPlanilha' planilha.pk %}" class="btn btn-danger btn-sm" title="Excluir">
                         <i class="fas fa-trash"></i>
                     </a>
                     <a href="{% url 'verPlanilha' planilha.pk %}" class="btn btn-info btn-sm" title="Ver Detalhes">
@@ -57,14 +52,16 @@
     </table>
 </div>
 
-<iframe src="https://docs.google.com/spreadsheets/d/1LvYC5bapUbCmnwJ5dFgroXmnA-Jx-xtnvz35Kkj_iOQ/edit?usp=sharing&headers=false" width="100%" height="500" frameborder="0" marginheight="0" marginwidth="0">Carregando…</iframe>
 {% endblock %}
 
 {% block scripts %}
 <script>
     $(document).ready(function () {
         $('#tabela-conteudo').DataTable({
-            "order": []  // Remova a ordenação padrão se não for necessário
+            "order": [],  // Remova a ordenação padrão se não for necessário
+            "language": {
+                "url": "{% static 'DataTables/i18n/portugues.json' %}"
+            }
         });
     });
 </script>

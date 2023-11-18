@@ -66,25 +66,24 @@ class Planilha(models.Model):
         # Se não houver correspondência, retorne None para indicar que o ID não pôde ser encontrado
         return None
 
-    def obter_links_de_download(token, planilha_id):
+    def obter_links_de_downlload(token, planilha_id):
         # Autenticação e obtenção do token de acesso (você precisa implementar essa função)
         gc, access_token = authenticate_google_sheets()
         
 
         # Cabeçalhos da solicitação
         headers = {
+            "Authorization": f"Bearer {access_token}", 
             "Accept": "application/json",
-            "Authorization": f"Bearer {access_token}"
         }
 
         # Parâmetros a serem enviados na solicitação
         params = {
             "planilhaId": planilha_id,  # Substitua pela ID da sua planilha
-            "token": access_token
         }
 
         # URL do script do Google Apps
-        apps_script_url = "https://script.google.com/macros/s/AKfycbwzb4iWFAoFwnD6iKlHLb_t5dk-tu9CI7PwgkrMwUoMG8G6AYAunfaogxt_wxL3qRnQoQ/exec"
+        apps_script_url = "https://script.google.com/macros/s/AKfycbwdgVpMpIb4l3RusWIXnoMo3qhI2pJjHjE7qDfzlPcDxcXWDrDgUyPSli_Sosq4zn9d/exec"
 
         # Faça a solicitação GET para a URL original
         response = requests.get(apps_script_url, params=params, headers=headers)
@@ -101,7 +100,9 @@ class Planilha(models.Model):
             if response.status_code == 200:
                 # O conteúdo da resposta é um JSON que você pode processar
                 data = response.json()
+                print('voce está em status == 200')
                 print(data)
+                breakpoint()
             else:
                 # Em caso de erro, imprima o código de status e o conteúdo da resposta
                 print(f"Erro {response.status_code}: {response.text}")
@@ -110,50 +111,16 @@ class Planilha(models.Model):
             # Se não houver redirecionamento, a resposta contém o JSON desejado
             try:
                 data = response.json()
-                print(data)
+                return data
             except ValueError as e:
                 # A resposta não é um JSON válido
                 print(f"Erro ao analisar JSON: {e}")
                 print(f"Resposta: {response.text}")
 
-    # define para onde sera o UpLoad dos arquivos
-    def upload_to_path(instance, filename):
-        # Gera o caminho de upload dinâmico
-        return os.path.join(
-            'graficos',
-            timezone.now().strftime('%Y/%m/%d'),
-            filename
-        )
-
-    # Usadda para alterar as configurações de compartilhamento das imagens criadas pelo apps scripts
-    def alterar_configuracoes_compartilhamento(imagem_url):
-        # Obtenha as credenciais e crie uma instância do serviço Google Drive
-        creds, token = authenticate_google_sheets()
-        print(f"token de acesso:  {creds}")
-        breakpoint()
-        drive_service = build('drive', 'v2', credentials=creds)
-        # Extraia o ID do arquivo da imagem URL
-        file_id = imagem_url.split('=')[1]
-
-        # Defina as configurações de compartilhamento desejadas
-        permissions = {
-            'role': 'writer',  # Permite edição
-            'type': 'anyone',
-        }
-
-        # Atualize as permissões do arquivo
-        drive_service.permissions().create(
-            fileId=file_id,
-            body=permissions,
-        ).execute()
-
-        print(f"Configurações de compartilhamento alteradas para {imagem_url}")
-        breakpoint()
-
-
+   
 class Grafico(models.Model):
     image = models.FileField(
-        upload_to=Planilha.upload_to_path,
+        upload_to='graficos/%Y/%m/%d/',
         verbose_name='Imagem',
         validators=[validate_image_extension])
     descricao = models.CharField(max_length=200, verbose_name='Descrição')
@@ -192,7 +159,7 @@ class Video(models.Model):
 
 class Imagem(models.Model):
     image = models.FileField(
-        upload_to='pics/%Y/%m/%d/',
+        upload_to='imagem/%Y/%m/%d/',
         verbose_name='Imagem',
         validators=[validate_image_extension]
     )

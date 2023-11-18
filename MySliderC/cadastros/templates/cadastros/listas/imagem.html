@@ -9,50 +9,55 @@
 <hr>
 <div class="table-responsive">
     <table class="table table-striped">
-        <tr>
-            <th>Título</th>
-            <th>Sub Título</th>
-            <th>Descrição</th>
-            <th>Contém</th>
-            <th>opções</th>
-        </tr>
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Sub Título</th>
+                <th>Descrição</th>
+                <th>Contém</th>
+                <th>opções</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- percorrer lista de objetos -->
+            {% for Imagem in object_list %}
+            <tr>
+                <td>{{ Imagem.title }}</td>
+                <td>{{ Imagem.sub_title }}</td>
+                <td>{{ Imagem.descricao }}</td>
+                <td>
+                    <a href="{{Imagem.Imagem.url }}"><i class="fas fa-image"></i></a>
+                </td>
 
-        <!-- percorrer lista de objetos -->
-        {% for Imagem in object_list %}
-        <tr>
-            <td>{{ Imagem.title }}</td>
-            <td>{{ Imagem.sub_title }}</td>
-            <td>{{ Imagem.descricao }}</td>
-            <td>
-                <a href="{{Imagem.Imagem.url }}"><i class="fas fa-image"></i></a>
-            </td>
-         
-            <td> 
-                <a href="{% url 'upImagem' Imagem.pk %}" class="btn btn-warning btn-sm" title="editar">
-                    <i class="fas fa-pencil-alt"></i> <!-- Ícone de lápis -->
-                </a>
-                <a href="{% url 'delImagem' Imagem.pk %}" class="btn btn-danger btn-sm"  title="excluir">
-                    <i class="fas fa-trash"></i> <!-- Ícone de lixeira -->
-                </a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="3">Nenhum setor registrado</td>
-        </tr>
-        {% endfor %}
+                <td>
+                    <a href="{% url 'upImagem' Imagem.pk %}" class="btn btn-warning btn-sm" title="editar">
+                        <i class="fas fa-pencil-alt"></i> <!-- Ícone de lápis -->
+                    </a>
+                    <a href="{% url 'delImagem' Imagem.pk %}" class="btn btn-danger btn-sm" title="excluir">
+                        <i class="fas fa-trash"></i> <!-- Ícone de lixeira -->
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">Nenhum setor registrado</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 
-    <div class="text-center">
-        {% if page_obj.has_previous %}
-        <a href="?page={{page_obj.previous_page_number}}"><i class="fas fa-chevron-left"></i></a>
-        {% endif %}
 
-        <span> {{page_obj.number}}</span>
-
-        {% if page_obj.has_next %}
-        <a href="?page={{page_obj.next_page_number}}"><i class="fas fa-chevron-right"></i></a>
-        {% endif %}
-    </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#tabela-conteudo').DataTable({
+            "order": [],  // Remova a ordenação padrão se não for necessário
+            "language": {
+                "url": "{% static 'DataTables/i18n/portugues.json' %}"
+            }
+        });
+    });
+</script>
 {% endblock %}

@@ -25,7 +25,23 @@
       <img src="{{ conteudo.imagem.image.url }}" style="max-height: 100vh; width: 100%; object-fit: contain;">
     </div>
 
-    {% endif %}
+    {% elif conteudo.tipo == 'planilha' %}
+    {% with graficos_planilha=conteudo.planilha.graficoplanilha_set.all %}
+        {% if graficos_planilha.exists %}
+            {% for grafico_planilha in graficos_planilha %}
+                {# Para cada gráfico associado à planilha, buscar o objeto Grafico usando a pk #}
+                {% with grafico=grafico_planilha.grafico %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-interval="{{ conteudo.planilha.tempo|multiply:1000  }}">
+                        <img src="{{ grafico.image.url }}" style="max-height: 100vh; width: 100%; object-fit: contain;">
+                    </div>
+                {% endwith %}
+            {% endfor %}
+        {% else %}
+            {# Se não houver gráficos associados, mostrar um parágrafo indicando que não há gráficos #}
+            <p>Não há gráficos associados a esta planilha.</p>
+        {% endif %}
+    {% endwith %}
+{% endif %}
     {% endfor %}
   </div>
   <a class="carousel-control-prev" href="#carouselExampleInterval" role="button" data-bs-slide="prev">

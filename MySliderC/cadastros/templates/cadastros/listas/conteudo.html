@@ -14,9 +14,7 @@
                 <th>Sub Título</th>
                 <th>Descrição</th>
                 <th>Tipo</th>
-             
                 <th>Contém</th>
-                
                 <th>Cadastrado por:</th>
                 <th>Opções</th>
             </tr>
@@ -25,39 +23,50 @@
         <tbody>
             {% for conteudo in object_list %}
             <tr>
-                <td> {% if conteudo.tipo == 'video' %}
+                <td>
+                    {% if conteudo.tipo == 'video' %}
                     {{ conteudo.video.title }}
-                    {% else %}
+                    {% elif conteudo.tipo == 'imagem' %}
                     {{ conteudo.imagem.title }}
+                    {% elif conteudo.tipo == 'planilha' %}
+                    {{ conteudo.planilha.title }}
                     {% endif %}
                 </td>
-                <td> {% if conteudo.tipo == 'video' %}
+                <td>
+                    {% if conteudo.tipo == 'video' %}
                     {{ conteudo.video.sub_title }}
-                    {% else %}
+                    {% elif conteudo.tipo == 'imagem' %}
                     {{ conteudo.imagem.sub_title }}
+                    {% elif conteudo.tipo == 'planilha' %}
+                    {{ conteudo.planilha.sub_title }}
                     {% endif %}
                 </td>
-                <td> {% if conteudo.tipo == 'video' %}
+                <td>
+                    {% if conteudo.tipo == 'video' %}
                     {{ conteudo.video.descricao }}
-                    {% else %}
+                    {% elif conteudo.tipo == 'imagem' %}
                     {{ conteudo.imagem.descricao }}
+                    {% elif conteudo.tipo == 'planilha' %}
+                    {{ conteudo.planilha.descricao }}
                     {% endif %}
                 </td>
                 <td>{{ conteudo.tipo }}</td>
                 <td>
                     {% if conteudo.tipo == 'video' %}
                     <a href="{{ conteudo.video.video.url }}"><i class="fas fa-play"></i></a>
-                    {% else %}
-               
-                    
+                    {% elif conteudo.tipo == 'imagem' %}
                     <a href="{{ conteudo.imagem.image.url }}"><i class="fas fa-image"></i></a>
+                    {% elif conteudo.tipo == 'planilha' %}
+                    <i class="fas fa-file-excel"></i>
                     {% endif %}
                 </td>
-               
-                <td> {% if conteudo.tipo == 'video' %}
+                <td>
+                    {% if conteudo.tipo == 'video' %}
                     {{ conteudo.video.usuario.username }}
-                    {% else %}
+                    {% elif conteudo.tipo == 'imagem' %}
                     {{ conteudo.imagem.usuario.username }}
+                    {% elif conteudo.tipo == 'planilha' %}
+                    {{ conteudo.planilha.usuario.username }}
                     {% endif %}
                 </td>
                 <td>
@@ -71,7 +80,7 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="9">Nenhum conteúdo registrado</td>
+                <td colspan="7">Nenhum conteúdo registrado</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -83,7 +92,10 @@
 <script>
     $(document).ready(function () {
         $('#tabela-conteudo').DataTable({
-            "order": []  // Remova a ordenação padrão se não for necessário
+            "order": [],  // Remova a ordenação padrão se não for necessário
+            "language": {
+                "url": "{% static 'DataTables/i18n/portugues.json' %}"
+            }
         });
     });
 </script>

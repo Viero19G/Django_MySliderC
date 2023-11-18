@@ -9,31 +9,46 @@
 <hr>
 <div class="table-responsive">
     <table class="table table-striped">
-        <tr>
-            <th>Nome</th>
-            <th>Perfil</th>
-            <th>Descrição do Acesso</th>
-            <th>opções</th>
-        </tr>
-
-        <!-- percorrer lista de objetos -->
-        {% for usrPerfil in object_list %}
-        <tr>
-            <td>{{ usrPerfil.usuario.usrNome }}</td>
-            <td>{{ usrPerfil.perfil.perfilNome }}</td>
-            <td>{{ usrPerfil.descricao }}</td>
-            <td>
-                <a href="{% url 'upUsuarioPerfil' usrPerfil.pk %}" class="btn btn-warning btn-sm" title="editar"> 
-                    <i class="fas fa-pencil-alt"></i> <!-- Ícone de lápis --></a>
-                <a href="{% url 'delUsuarioPerfil' usrPerfil.pk %}" class="btn btn-danger btn-sm"
-                    title="excluir">   <i class="fas fa-trash"></i> <!-- Ícone de lixeira --></a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="4">Nenhuma permissão registrada</td>
-        </tr>
-        {% endfor %}
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Perfil</th>
+                <th>Descrição do Acesso</th>
+                <th>opções</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- percorrer lista de objetos -->
+            {% for usrPerfil in object_list %}
+            <tr>
+                <td>{{ usrPerfil.usuario.usrNome }}</td>
+                <td>{{ usrPerfil.perfil.perfilNome }}</td>
+                <td>{{ usrPerfil.descricao }}</td>
+                <td>
+                    <a href="{% url 'upUsuarioPerfil' usrPerfil.pk %}" class="btn btn-warning btn-sm" title="editar">
+                        <i class="fas fa-pencil-alt"></i> <!-- Ícone de lápis --></a>
+                    <a href="{% url 'delUsuarioPerfil' usrPerfil.pk %}" class="btn btn-danger btn-sm" title="excluir">
+                        <i class="fas fa-trash"></i> <!-- Ícone de lixeira --></a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Nenhuma permissão registrada</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 </div>
+{% endblock %}
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#tabela-conteudo').DataTable({
+            "order": [],  // Remova a ordenação padrão se não for necessário
+            "language": {
+                "url": "{% static 'DataTables/i18n/portugues.json' %}"
+            }
+        });
+    });
+</script>
 {% endblock %}

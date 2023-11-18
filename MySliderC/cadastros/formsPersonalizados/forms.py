@@ -30,4 +30,15 @@ class PlanilhaForm(forms.ModelForm):
 
     class Meta:
         model = Planilha
-        fields = ['planilha_url', 'title', 'sub_title', 'descricao']
+        fields = ['planilha_url', 'title', 'sub_title', 'descricao','tempo']
+
+
+class PlanilhaUpForm(forms.ModelForm):
+    class Meta:
+        model = Planilha
+        fields = ['planilha_id', 'title', 'sub_title', 'descricao', 'tempo']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Tornar o campo planilha_id readonly
+        self.fields['planilha_id'].widget.attrs['readonly'] = True

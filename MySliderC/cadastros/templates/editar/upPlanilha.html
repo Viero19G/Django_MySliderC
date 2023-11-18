@@ -1,0 +1,12 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+
+{% block conteudo %}
+<h1>Editando Planilha</h1>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Salvar</button>
+</form>
+<a href="{% url 'listPlanilha' %}">Voltar para a lista de Planilhas</a>
+{% endblock %}

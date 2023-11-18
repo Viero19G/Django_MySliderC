@@ -8,28 +8,34 @@
   <p>Subtítulo: {{ planilha.sub_title }}</p>
   <p>Descrição: {{ planilha.descricao }}</p>
 
-  {% if grafico %}
-    <img src="{{ grafico }}" alt="Gráfico">
-  {% endif %}
+  <!-- Lógica para verificar e exibir imagens de gráficos -->
+  <div class="row">
+    {% for grafico_planilha in planilha.graficoplanilha_set.all %}
+      <div class="col-md-6 mb-3">
+        <img src="{{ grafico_planilha.grafico.image.url }}" alt="{{ grafico_planilha.grafico.descricao }}" class="img-fluid">
+      </div>
+    {% endfor %}
 
-  {% for aba in abas %}
-    <h3>{{ aba.title }}</h3>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          {% if aba.get_all_values %}
-            {% with data=aba.get_all_values %}
-              {% for row in data %}
-                <tr>
-                  {% for cell in row %}
-                    <td>{{ cell }}</td>
+    {% for aba_info in abas_info %}
+      <div class="col-md-6 mb-3">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              {% if aba_info.data %}
+                {% with data=aba_info.data %}
+                  {% for row in data %}
+                    <tr>
+                      {% for cell in row %}
+                        <td>{{ cell }}</td>
+                      {% endfor %}
+                    </tr>
                   {% endfor %}
-                </tr>
-              {% endfor %}
-            {% endwith %}
-          {% endif %}
-        </tr>
-      </thead>
-    </table>
-  {% endfor %}
+                {% endwith %}
+              {% endif %}
+            </tr>
+          </thead>
+        </table>
+      </div>
+    {% endfor %}
+  </div>
 {% endblock %}

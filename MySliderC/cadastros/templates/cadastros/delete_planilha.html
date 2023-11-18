@@ -1,0 +1,27 @@
+{% extends 'paginas/modelo.html' %}
+{% load static %}
+
+{% block conteudo %}
+  <h1>{{ titulo }}</h1>
+
+  <p>Tem certeza de que deseja excluir a planilha "{{ planilha.title }}"?</p>
+
+  {% if graficos_relacionados %}
+    <p>A exclusão desta planilha também excluirá os seguintes gráficos:</p>
+    <ul>
+      <li>Grafico(s) Associado(s):</li>
+      {% for grafico_relacionado in graficos_relacionados %}
+        
+        <img src="{{ grafico_relacionado.grafico.image.url }}" alt="">
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <form method="post" action="{% url 'delPlanilha' pk=planilha.pk %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Confirmar exclusão</button>
+    <a href="{% url 'listPlanilha' %}">Cancelar</a>
+  </form>
+{% endblock %}
+

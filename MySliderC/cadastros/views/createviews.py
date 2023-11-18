@@ -75,7 +75,7 @@ class GradeCreate(LoginRequiredMixin, CreateView):
 class ConteudoCreate(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
     model = Conteudo
-    fields = ['tipo', 'video', 'imagem',]
+    fields = ['tipo', 'video', 'imagem', 'planilha']
     template_name = 'cadastros/create.html'
     success_url = reverse_lazy('listConteudo')
 
@@ -113,6 +113,7 @@ class VideoCreate(LoginRequiredMixin, CreateView):
     template_name = 'cadastros/create.html'
     success_url = reverse_lazy('listVideo')
 
+
     def form_valid(self, form):
         user = self.request.user
 
@@ -123,26 +124,17 @@ class VideoCreate(LoginRequiredMixin, CreateView):
         if user.groups.filter(Q(name='administrador') | Q(name='marketing')).exists():
             # Se o usuário pertencer a qualquer um dos grupos, permita que ele crie o conteúdo
             form.instance.usuario = user
-            # atenção url default do django usa barras normais e para encontrar o arquivo no windows
+            # atenção url default do Django usa barras normais e para encontrar o arquivo no Windows
             # é necessário usar barras invertidas
             enviar = super().form_valid(form)
             caminho = r'C:\Users\gabri\Documents\projetos_django\DjangoProjeto_II\MySliderC'
 
-            # Obtenha o caminho correto do vídeo usando o método url do campo FileField
-            video_path = form.instance.video.url
+            # Obtenha o caminho correto do vídeo usando o método path do campo FileField
+            video_path = form.instance.video.path
             print(f"Caminho do vídeo: {video_path}")
 
-            # Adicione '/pics/videos/' à parte inicial do caminho do vídeo
-
-            # Certifique-se de que o caminho comece com '/media/' para que seja um caminho absoluto completo
-            if video_path.startswith('/media/'):
-                # Remova '/media/' para obter o caminho relativo real
-                video_path = video_path[len('/media/'):]
-
-            formata_win = os.path.normpath(video_path)
-            buscar_em = caminho + formata_win
             try:
-                with VideoFileClip(buscar_em) as clip:
+                with VideoFileClip(video_path) as clip:
                     form.instance.tempo = int(clip.duration)
             except Exception as e:
                 print(f"Erro ao obter a duração do vídeo: {e}")
@@ -168,21 +160,12 @@ class VideoCreate(LoginRequiredMixin, CreateView):
                 enviar = super().form_valid(form)
                 caminho = r'C:\Users\gabri\Documents\projetos_django\DjangoProjeto_II\MySliderC'
 
-                # Obtenha o caminho correto do vídeo usando o método url do campo FileField
-                video_path = form.instance.video.url
+                # Obtenha o caminho correto do vídeo usando o método path do campo FileField
+                video_path = form.instance.video.path
                 print(f"Caminho do vídeo: {video_path}")
 
-                # Adicione '/pics/videos/' à parte inicial do caminho do vídeo
-
-                # Certifique-se de que o caminho comece com '/media/' para que seja um caminho absoluto completo
-                if video_path.startswith('/media/'):
-                    # Remova '/media/' para obter o caminho relativo real
-                    video_path = video_path[len('/media/'):]
-
-                formata_win = os.path.normpath(video_path)
-                buscar_em = caminho + formata_win
                 try:
-                    with VideoFileClip(buscar_em) as clip:
+                    with VideoFileClip(video_path) as clip:
                         form.instance.tempo = int(clip.duration)
                 except Exception as e:
                     print(f"Erro ao obter a duração do vídeo: {e}")
@@ -243,7 +226,7 @@ class ImagemCreate(LoginRequiredMixin, CreateView):
         return context
 
 
-class PlanilhaCreateView(LoginRequiredMixin, CreateView):
+class PlanilhaCreate(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
     model = Planilha
     form_class = PlanilhaForm
@@ -267,53 +250,69 @@ class PlanilhaCreateView(LoginRequiredMixin, CreateView):
             gc, access_token = authenticate_google_sheets()
 
             # Salvar a Planilha fora do loop de imagens
-            verifica_graficos = Planilha.obter_links_de_download(
+            verifica_graficos = Planilha.obter_links_de_downlload(
                 access_token, Planilha_Id)
             print("Verificação de gráficos:", verifica_graficos)
+            # Salvar o formulário e, portanto, a instância do modelo
+            response = super().form_valid(form)
+
+            # Agora, a instância do modelo foi salva no banco de dados e tem uma PK
+            pk_da_planilha = self.object.pk
+            print("PK da Planilha:", pk_da_planilha)
 
             # Se "imagens" estiver presente e não vazio, processar as imagens
             if "imagens" in verifica_graficos and verifica_graficos["imagens"]:
-                self.processar_imagens(verifica_graficos["imagens"], access_token)
-
+                self.processar_imagens(
+                    verifica_graficos["imagens"], access_token, pk_da_planilha)
+                messages.success(
+                    self.request, "Imagens processadas com sucesso.")
             else:
                 messages.warning(
                     self.request, "Nenhum gráfico presente nessa planilha.")
                 # Não há imagens, mas salva a planilha
-                return super().form_valid(form)
+                return response
 
-            return super().form_valid(form)
+            return response
         else:
             messages.error(self.request, "Erro ao extrair link da planilha.")
             return self.form_invalid(form)
 
-    def processar_imagens(self, imagens, access_token):
+    def processar_imagens(self, imagens, access_token, pk_da_planilha):
         for imagem_url in imagens:
-            filename = self.obter_nome_do_arquivo(imagem_url)
-            output_path = Planilha.upload_to_path(self, filename)
-            print("Salvando em:", output_path)
-            breakpoint()
+            try:
+                # Obtenha o nome do arquivo da URL
+                filename = f"{self.obter_nome_do_arquivo(imagem_url)}.png"
+                # Construa o caminho do arquivo no qual salvar o gráfico
+                output_dir = os.path.join(
+                    'pics', 'graficos', timezone.now().strftime('%Y/%m/%d'))
+                output_path = os.path.join(output_dir, filename)
 
-            # Certifique-se de que o diretório existe
-            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+                # Certifique-se de que o diretório exista
+                os.makedirs(output_dir, exist_ok=True)
 
-            # Fazer o download da imagem usando gdown
-            imagem_url_com_token = f"{imagem_url}&access_token={access_token}"
-            Planilha.alterar_configuracoes_compartilhamento(imagem_url)
-            gdown.download(imagem_url_com_token, output_path, quiet=False)
-            print("Download concluído")
-            breakpoint()
+                # Fazer o download da imagem usando gdown diretamente no caminho desejado
+                imagem_url_com_token = f"{imagem_url}&access_token={access_token}"
+                gdown.download(imagem_url_com_token, output_path, quiet=False)
 
-            # Criar um objeto Grafico
-            grafico = Grafico()
-            grafico.descricao = "Automatizado"
+                # Criar um objeto Grafico
+                grafico = Grafico(descricao="Automatizado")
 
-            # Salvar a imagem no objeto Grafico
-            with open(output_path, 'rb') as f:
-                grafico.image.save(filename, ContentFile(f.read()), save=True)
+                # Usar o contexto with para abrir e ler o arquivo
+                with open(output_path, 'rb') as f:
+                    grafico.image.save(
+                        filename, ContentFile(f.read()), save=True)
 
-            # Criar a relação GraficoPlanilha
-            grafico_planilha = GraficoPlanilha(planilha=self, grafico=grafico)
-            grafico_planilha.save()
+                # Relacionar o gráfico à planilha
+                # Obtendo a instância da Planilha usando o pk_da_planilha
+                planilha_instance = Planilha.objects.get(pk=pk_da_planilha)
+
+                # Criar a relação GraficoPlanilha
+                grafico_planilha = GraficoPlanilha(
+                    planilha=planilha_instance, grafico=grafico)
+                grafico_planilha.save()
+
+            except Exception as e:
+                print(f"Erro ao processar imagem: {str(e)}")
 
     def obter_nome_do_arquivo(self, imagem_url):
         # Usar split para obter o nome do arquivo da URL
@@ -323,7 +322,6 @@ class PlanilhaCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-
         context['titulo'] = "Compartilhando Planilha"
         context['botao'] = "Compartilhar"
         return context
