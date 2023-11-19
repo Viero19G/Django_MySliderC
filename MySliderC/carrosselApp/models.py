@@ -49,8 +49,11 @@ class Planilha(models.Model):
     sub_title = models.CharField(max_length=200, verbose_name='Sub-Título')
     descricao = models.CharField(max_length=200, verbose_name='Descrição')
     usuario = models.ForeignKey(
-        User, on_delete=models.PROTECT, verbose_name='Usuário', default=None)
+        User, on_delete=models.SET_NULL, verbose_name='Usuário', default=None, null=True, blank=True)
     tempo = models.PositiveBigIntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return "{} ".format(self.title)
 
     def extrair_id_da_planilha(url):
         # Padrão de expressão regular para encontrar o ID da planilha
@@ -79,6 +82,7 @@ class Planilha(models.Model):
 
         # Parâmetros a serem enviados na solicitação
         params = {
+            
             "planilhaId": planilha_id,  # Substitua pela ID da sua planilha
         }
 
@@ -87,6 +91,7 @@ class Planilha(models.Model):
 
         # Faça a solicitação GET para a URL original
         response = requests.get(apps_script_url, params=params, headers=headers)
+        print(response)
 
         # Verifique se a resposta contém um URL de redirecionamento
         if response.status_code == 302:
@@ -102,7 +107,6 @@ class Planilha(models.Model):
                 data = response.json()
                 print('voce está em status == 200')
                 print(data)
-                breakpoint()
             else:
                 # Em caso de erro, imprima o código de status e o conteúdo da resposta
                 print(f"Erro {response.status_code}: {response.text}")
@@ -142,7 +146,7 @@ class Video(models.Model):
     descricao = models.CharField(max_length=200, verbose_name='Descrição')
     tempo = models.PositiveBigIntegerField(blank=True, null=True)
     usuario = models.ForeignKey(
-        User, on_delete=models.PROTECT, verbose_name='Usuário', default=None)
+        User, on_delete=models.SET_NULL, verbose_name='Usuário', default=None, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.usuario_id:
@@ -168,8 +172,8 @@ class Imagem(models.Model):
     descricao = models.CharField(max_length=200, verbose_name='Descrição')
     tempo = models.PositiveBigIntegerField(blank=True, null=True)
     usuario = models.ForeignKey(
-        User, on_delete=models.PROTECT, verbose_name='Usuário', default=None)
-
+        User, on_delete=models.SET_NULL, verbose_name='Usuário', default=None, null=True, blank=True)
+    
     def save(self, *args, **kwargs):
         if not self.usuario_id:
             self.usuario = get_user()
@@ -198,6 +202,16 @@ class Conteudo(models.Model):
         Imagem, on_delete=models.CASCADE, null=True, blank=True)
     planilha = models.ForeignKey(
         Planilha, on_delete=models.CASCADE, null=True, blank=True)
+    def __str__(self):
+        if self.tipo == 'imagem':
+            return f'Imagem: {self.imagem.title}'  # Ou qualquer informação que você queira exibir
+        elif self.tipo == 'video':
+            return f'Vídeo: {self.video.title}'  # Ou qualquer informação que você queira exibir
+        elif self.tipo == 'planilha':
+            return f'Planilha: {self.planilha.title}'  # Ou qualquer informação que você queira exibir
+        else:
+            return 'Conteúdo desconhecido'
+
 
 
 class Grade(models.Model):

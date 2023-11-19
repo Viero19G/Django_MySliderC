@@ -6,15 +6,17 @@ from braces.views import GroupRequiredMixin
 from django.http import HttpResponseForbidden
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.shortcuts import redirect
 
-from cadastros.formsPersonalizados.forms import PlanilhaUpForm
+from cadastros.formsPersonalizados.forms import PlanilhaUpForm, GradeForm
 from django.core.files.base import ContentFile
 import gdown
 
 
-class SetorUpdate(LoginRequiredMixin, UpdateView):
+class SetorUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
     model = Setor
+    group_required = ["administrador"]
     fields = ['nome', 'membros']
     template_name = 'cadastros/create.html'
     success_url = reverse_lazy('listSetor')
@@ -26,7 +28,7 @@ class SetorUpdate(LoginRequiredMixin, UpdateView):
         if setor.usuario == request.user:
             return super().dispatch(request, *args, **kwargs)
         else:
-            return HttpResponseForbidden("Você não tem permissão para editar este Setor.")
+            return redirect("inicio")
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -36,27 +38,47 @@ class SetorUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-class GradeUpdate(LoginRequiredMixin, UpdateView):
-    login_url = reverse_lazy('login')
+class GradeUpdate(UpdateView):
     model = Grade
-    fields = ['title', 'sub_title', 'conteudo', 'setor']
+    form_class = GradeForm
     template_name = 'editar/upGrade.html'
     success_url = reverse_lazy('listGrade')
+
+    def get_queryset(self):
+        return Grade.objects.all()
 
     def dispatch(self, request, *args, **kwargs):
         grade = self.get_object()
 
-        # Verifique se o usuário logado é o mesmo que criou a Grade
-        if grade.usuario == request.user:
+        if (grade.usuario == request.user or
+                request.user.groups.filter(name__in=['administradores', 'marketing']).exists() or
+                request.user in grade.usuariosEdit.all()):
             return super().dispatch(request, *args, **kwargs)
         else:
-            return HttpResponseForbidden("Você não tem permissão para editar esta Grade.")
+            return redirect("inicio")
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
 
         context['titulo'] = "Editando Grade"
         context['botao'] = "Salvar"
+
+        conteudo_urls = []
+        for conteudo in self.object.conteudo.all():
+            conteudo_url = None
+
+            if conteudo.tipo == 'imagem':
+                conteudo_url = conteudo.imagem.title
+            elif conteudo.tipo == 'video':
+                conteudo_url = conteudo.video.title
+            elif conteudo.tipo == 'planilha':
+                # ou qualquer informação que você queira exibir
+                conteudo_url = f'Planilha: {conteudo.planilha.title}'
+
+            conteudo_urls.append((conteudo, conteudo_url))
+
+        context['conteudo_urls'] = conteudo_urls
+
         return context
 
 
@@ -74,7 +96,7 @@ class ConteudoUpdate(LoginRequiredMixin, UpdateView):
         if conteudo.usuario == request.user:
             return super().dispatch(request, *args, **kwargs)
         else:
-            return HttpResponseForbidden("Você não tem permissão para editar este Conteúdo.")
+            return redirect("inicio")
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -98,7 +120,7 @@ class VideoUpdate(LoginRequiredMixin, UpdateView):
         if conteudo.usuario == request.user:
             return super().dispatch(request, *args, **kwargs)
         else:
-            return HttpResponseForbidden("Você não tem permissão para editar este Conteúdo.")
+            return redirect("inicio")
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -122,7 +144,7 @@ class ImagemUpdate(LoginRequiredMixin, UpdateView):
         if conteudo.usuario == request.user:
             return super().dispatch(request, *args, **kwargs)
         else:
-            return HttpResponseForbidden("Você não tem permissão para editar este Conteúdo.")
+            return redirect("inicio")
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -141,18 +163,23 @@ class PlanilhaUpdate(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     success_message = "Planilha atualizada com sucesso."
 
     def dispatch(self, request, *args, **kwargs):
+        # Verifica se o usuário logado pertence aos grupos 'administrador' ou 'marketing'
+        if request.user.groups.filter(name__in=['administrador', 'marketing']).exists():
+            return super().dispatch(request, *args, **kwargs)
+
+        # Obtém a planilha associada à view
         planilha = self.get_object()
 
-        # Verifique se o usuário logado é o mesmo que criou a Planilha
+        # Verifica se o usuário logado é o mesmo que criou a planilha
         if planilha.usuario == request.user:
             return super().dispatch(request, *args, **kwargs)
         else:
-            return HttpResponseForbidden("Você não tem permissão para editar esta Planilha.")
+            return redirect("inicio")
 
     def form_valid(self, form):
         # Obtém o objeto da Planilha antes da atualização
         planilha_antiga = self.get_object()
-        
+
         # Deleta as relações GraficoPlanilha e os gráficos associados
         self.deletar_relacoes_e_graficos(planilha_antiga)
 
@@ -196,11 +223,10 @@ class PlanilhaUpdate(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
             planilha=planilha)
         for relacao in graficos_relacionados:
             grafico = relacao.grafico
-            # Agora, exclua a relação 
+            # Agora, exclua a relação
             relacao.delete()
             # Agora, exclua o gráfico associado
             grafico.delete()
-
 
     def processar_imagens(self, imagens, access_token, pk_da_planilha):
         for imagem_url in imagens:

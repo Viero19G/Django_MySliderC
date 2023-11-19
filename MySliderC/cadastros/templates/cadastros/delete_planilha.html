@@ -20,8 +20,7 @@
   <form method="post" action="{% url 'delPlanilha' pk=planilha.pk %}">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Confirmar exclusão</button>
-    <a href="{% url 'listPlanilha' %}">Cancelar</a>
+    <a class="btn btn-secondary" href="{% url 'listPlanilha' %}">Cancelar</a>
   </form>
 {% endblock %}
 

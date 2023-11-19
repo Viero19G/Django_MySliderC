@@ -8,5 +8,4 @@ class Perfil(models.Model):
     telefone = models.CharField(max_length=16, null=True, verbose_name='Telefone ')
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Usuário ')
 
-      # Campo para associar a autenticação social com o Google
-    social_auth = models.ForeignKey(UserSocialAuth, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Autenticação Social')
+      

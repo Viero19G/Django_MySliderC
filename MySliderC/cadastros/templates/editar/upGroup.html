@@ -3,7 +3,7 @@
 
 {% block conteudo %}
   <h1>Editar Grupo: {{ grupo.name }}</h1>
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <label for="id_users">Usuários:</label>

@@ -1,7 +1,9 @@
 body {
   position: relative;
-  min-height: 100%; /* Isso garante que o conteúdo ocupe pelo menos a altura da tela inteira. */
-  padding-bottom: 10%; /* Ajuste para a altura do rodapé */
+  min-height: 100%;
+  /* Isso garante que o conteúdo ocupe pelo menos a altura da tela inteira. */
+  padding-bottom: 10%;
+  /* Ajuste para a altura do rodapé */
 }
 
 
@@ -10,9 +12,126 @@ body {
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 70px; /* Defina a altura desejada para o rodapé aqui */
-  background-color: #333; /* Cor de fundo do rodapé */
-  color: #fff; /* Cor do texto do rodapé */
+  height: 70px;
+  /* Defina a altura desejada para o rodapé aqui */
+  background-color: #333;
+  /* Cor de fundo do rodapé */
+  color: #fff;
+  /* Cor do texto do rodapé */
   text-align: center;
-  line-height: 70px; /* Centralizar verticalmente o conteúdo do rodapé */
+  line-height: 70px;
+  /* Centralizar verticalmente o conteúdo do rodapé */
 }
+
+.destaque-mensagem {
+  text-align: center;
+  background-color: #f39d1285;
+  /* Laranja */
+  padding: 20px;
+  border-radius: 8px;
+  /* Bordas arredondadas */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Sombra suave */
+  margin: 20px auto;
+  /* Centraliza na página */
+  max-width: 600px;
+  /* Largura máxima */
+}
+
+.destaque-mensagem p {
+  margin: 0;
+  /* Remove margens padrão do parágrafo */
+  color: #636363;
+  /* Cinza escuro para o texto */
+  font-family: 'Roboto', sans-serif;
+  /* Escolhe a fonte Roboto */
+  font-size: 18px;
+  /* Define o tamanho da fonte */
+  font-weight: bold;
+  /* Deixa o texto em negrito para destaque */
+}
+
+.destaque-mensagem:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  /* Sombra ao passar o mouse */
+  transform: translateY(-3px);
+  /* Efeito de relevo para cima */
+}
+
+.destaque-mensagem p:hover {
+  color: rgb(255, 255, 255);
+  /* Cor laranja ao passar o mouse */
+  text-shadow: 2px 2px 4px #0000007f;
+  /* Sombra para dar efeito 3D */
+  position: relative;
+  /* Permite usar propriedades de posicionamento */
+  z-index: 1;
+  /* Coloca o elemento para a frente ao passar o mouse */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+
+  text-shadow: 2px 2px 4px #FFA500;
+  /* Sombra para dar efeito 3D */
+  position: relative;
+  /* Permite usar propriedades de posicionamento */
+}
+
+h1::before,
+h2::before,
+h3::before,
+h4::before,
+h5::before,
+h6::before {
+  content: '';
+  /* Conteúdo vazio */
+  position: absolute;
+  /* Posicionamento absoluto em relação ao elemento pai */
+  width: 100%;
+  /* Largura total do elemento pai */
+  height: 100%;
+  /* Altura total do elemento pai */
+  background: #fff;
+  /* Cor de fundo (pode ser a cor do seu plano de fundo) */
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+  /* Forma do "relevo" */
+  z-index: -1;
+  /* Coloca a forma atrás do texto */
+}
+
+h1:hover,
+h2:hover,
+h3:hover,
+h4:hover,
+h5:hover,
+h6:hover {
+  color: orange;
+  /* Cor laranja ao passar o mouse */
+  text-shadow: 2px 2px 4px #FFA500;
+  /* Sombra para dar efeito 3D */
+  position: relative;
+  /* Permite usar propriedades de posicionamento */
+  z-index: 1;
+  /* Coloca o elemento para a frente ao passar o mouse */
+}
+
+/* Estilo específico para h5 (negrito-grosso) */
+h5 {
+  font-weight: bold;
+  /* Texto negrito e grosso */
+}
+
+.btn-info:hover,
+.btn-warning:hover,
+.btn-danger:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  /* Sombra ao passar o mouse */
+  transform: translateY(-3px);
+  /* Efeito de relevo para cima */
+}
+

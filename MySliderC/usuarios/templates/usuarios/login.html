@@ -1,7 +1,7 @@
 {% extends 'paginas/modelo.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
-{% block conteudo %}  {# Alterei 'conteudo' para 'content' seguindo a convenção padrão #}
+{% block conteudo %}  
   <hr>
   <div class="row">
     {% if request.user.is_authenticated %}
@@ -15,7 +15,6 @@
         <form method="post">
           {% csrf_token %}
           {{ form|crispy }}
-          <a class="btn btn-danger" href="{% url 'social:begin' 'google-oauth2' %}">Logar com Google</a>  {# Alterei de 'social_begin' para 'social:begin' #}
           <button type="submit" class="btn btn-primary">Entrar</button>
         </form>
       </div>

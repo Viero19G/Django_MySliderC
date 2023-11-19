@@ -16,7 +16,7 @@ from braces.views import GroupRequiredMixin
 class SetorDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 
     login_url = reverse_lazy('login')
-    group_required = u"admiistrador"
+    group_required = ["administrador", "marketing"] 
     model = Setor
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listSetor')
@@ -31,7 +31,7 @@ class SetorDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 
 class GradeDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
-    group_required = u"administrador"
+    group_required = ["administrador", "marketing"] 
     model = Grade
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listGrade')
@@ -46,7 +46,7 @@ class GradeDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 
 class ConteudoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
-    group_required = u"administrador"
+    group_required = ["administrador", "marketing"] 
     model = Conteudo
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listConteudo')
@@ -59,9 +59,8 @@ class ConteudoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
         return context
 
 
-class VideoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
+class VideoDelete( LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
-    group_required = u"administrador"
     model = Video
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listVideo')
@@ -74,9 +73,8 @@ class VideoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
         return context
 
 
-class ImagemDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
+class ImagemDelete( LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
-    group_required = u"administrador"
     model = Imagem
     template_name = 'cadastros/delete.html'
     success_url = reverse_lazy('listImagem')
@@ -89,7 +87,7 @@ class ImagemDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
         return context
 
 
-class PlanilhaDelete(DeleteView):
+class PlanilhaDelete(LoginRequiredMixin, DeleteView):
     model = Planilha
     template_name = 'cadastros/delete_planilha.html'
     success_url = reverse_lazy('listPlanilha')

@@ -11,22 +11,29 @@
   {% endblock %}
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-<!-- Bootstrap -->
+  <!-- Bootstrap -->
   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 
-  <!-- CSS na unha -->
+  <!-- CSS   -->
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 
   <!-- import slick -->
-   <link rel="stylesheet" type="text/css" href="{% static 'css/slick.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/slick.css' %}">
+  <!-- import style -->
+
 
   <!-- dataTable -->
   <link href="{% static 'DataTables/datatables.min.css'%}" rel="stylesheet">
-{% block imports %}
+  <!-- Owl Carousel -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+
+  {% block imports %}
 
 
-{% endblock %}
+  {% endblock %}
 
 
 </head>
@@ -45,18 +52,15 @@
       <div class="container col-md-6 ml-auto" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{%url 'grade'%}"><i
-              class="fas fa-home"></i>Menu</a>
+            <a class="nav-link active" aria-current="page" href="{%url 'menu'%}"><i class="fas fa-home"></i>Menu</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fas fa-images"></i>Carrossel</a>
-          </li>
+
 
           <!-- navegando para creates -->
           {% if request.user.is_authenticated %}
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-            aria-expanded="false"><i class="fas fa-plus"></i> Cadastros</a>
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i
+                class="fas fa-plus"></i> Cadastros</a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="{%url 'cadastrar-video'%}">Video</a></li>
               <li>
@@ -66,7 +70,7 @@
               <li>
                 <hr class="dropdown-divider">
               </li>
-              <li><a class="dropdown-item" href="{%url 'cadastrar-setor'%}">Setor</a></li>
+              <li><a class="dropdown-item" href="{%url 'cadastrar-planilha'%}">Sheets</a></li>
               <li>
                 <hr class="dropdown-divider">
               </li>
@@ -78,15 +82,12 @@
               <li>
                 <hr class="dropdown-divider">
               </li>
-              <li><a class="dropdown-item" href="{%url 'cadastrar-planilha'%}">Sheets</a></li>
+              <li><a class="dropdown-item" href="{%url 'cadastrar-setor'%}">Setor</a></li>
               <li>
                 <hr class="dropdown-divider">
               </li>
-        
-              <li><a class="dropdown-item" href="#">Perfil para o Usuario</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
+
+           
             </ul>
           </li>
           {% endif %}
@@ -94,8 +95,8 @@
           <!-- navegando para Listas -->
           {% if request.user.is_authenticated %}
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-            aria-expanded="false"><i class="fas fa-list"></i> Listar</a>
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i
+                class="fas fa-list"></i> Listar</a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="{%url 'listVideo'%}">Video</a></li>
               <li>
@@ -120,60 +121,60 @@
               <li><a class="dropdown-item" href="{%url 'listPlanilha'%}">Planilha</a></li>
               <li>
                 <hr class="dropdown-divider">
-              </li>
-         
-              <li><a class="dropdown-item" href="#">Acessos</a></li>
-              <li>
-                <hr class="dropdown-divider">
+             
               </li>
             </ul>
           </li>
           {% endif %}
           <!--  -->
 
-        <!-- Navegando para Usuario -->
-<ul class="navbar-nav  ">
-  <!-- Itens de menu do dropdown "Usuários" aqui -->
-  {% if request.user.is_authenticated %}
-  <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-    aria-expanded="false"><i class="fas fa-user"></i> {{ request.user }}</a>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="{% url 'upPerfil'%}">Meus Dados</a></li>
-      <li><a class="dropdown-item" href="{% url 'verUsers'%}">Usuários</a></li>
-      <li><a class="dropdown-item" href="#">Alterar Senha</a></li>
-      <li>
-        <hr class="dropdown-divider">
-      </li>
-      <li><a class="dropdown-item" href="{% url 'logout'%}">Sair</a></li>
-      <li>
-        <hr class="dropdown-divider">
-      </li>
-    </ul>
-  </li>
-  {% else %}
+          <!-- Navegando para Usuario -->
+          <ul class="navbar-nav  ">
+            <!-- Itens de menu do dropdown "Usuários" aqui -->
+            {% if request.user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i
+                  class="fas fa-user"></i> {{ request.user }}</a>
+              <ul class="dropdown-menu">
 
-  <div class="btn-group">
-  
-    <button type="button" class="btn  dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
-      aria-haspopup="true" aria-expanded="false">
-      <i class="fas fa-plus"></i>
-      <span class="visually-hidden">Toggle Dropdown</span>
-    </button>
-    <ul class="dropdown-menu">
-      <li> <a href="{% url 'registrar'  %}" class="nav-link">
-        <i class="fas fa-user-plus"></i> <!-- Ícone para Novo Usuário -->
-        Novo Usuário
-      </a></li>
-      <li> <a class="nav-link" href="{%url 'login'%}">
-        <i class="fas fa-sign-in-alt"></i> <!-- Ícone para Entrar -->
-        Entrar
-      </a></li>
-    </ul>
-  </div>
-  {% endif %}
-</ul>
-<!--  -->
+                {% if request.user.is_superuser %}
+                <li><a class="dropdown-item" href="{% url 'verUsers'%}"><i class="fas fa-users"></i> Usuários</a></li>
+                <li> <a href="{% url 'registrar'  %}" class="nav-link">
+                    <i class="fas fa-user-plus"></i> <!-- Ícone para Novo Usuário -->
+                    Novo Usuário
+                  </a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="{% url 'logout'%}">Sair</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                {% else %}
+                <li><a class="dropdown-item" href="{% url 'upPerfil'%}">Meus Dados</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="{% url 'logout'%}">Sair</a></li>
+                {% endif %}
+              </ul>
+            </li>
+
+            {% else %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i
+                  class="fas fa-user"></i> Niguém Aqui</a>
+              <ul class="dropdown-menu">
+
+                <li> <a class="nav-link" href="{%url 'login'%}">
+                    <i class="fas fa-sign-in-alt"></i> <!-- Ícone para Entrar -->
+                    Entrar
+                  </a></li>
+              </ul>
+
+
+              {% endif %}
+          </ul>
         </ul>
       </div>
     </div>
@@ -196,28 +197,77 @@
 
 
 
+
+
+  <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+  <script src="{% static 'js/jquery.mask.min.js' %}"></script>
+  <script src="{% static 'popper.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/slick.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
+
+  <!-- DataTable -->
+  <script src="{% static 'DataTables/datatables.min.js'%}"></script>
+  <!-- Inclua o arquivo DataTables em português -->
+  <script src="{% static 'DataTables/i18n/portugues.json' %}"></script>
+
+  <!-- Owl Carousel JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      // Verifique o número de itens antes de inicializar o carrossel
+      var numberOfItems = $(".owl-carousel .card").length;
+
+      if (numberOfItems > 4) {
+        // Se houver mais de 4 itens, inicie o carrossel
+        $(".owl-carousel").owlCarousel({
+          items: 4,  // Número de itens visíveis
+          loop: true,
+          autoplayTimeout: 3000,  // Tempo de espera entre os slides em milissegundos
+          responsiveClass: true,
+          responsive: {
+            0: {
+              items: 1,
+            },
+            600: {
+              items: 3,
+            },
+            1000: {
+              items: 4,
+            }
+          }
+        });
+      } else {
+        // Se houver 4 itens ou menos, remova as classes do carrossel e mostre os itens de forma estática
+        $(".owl-carousel").removeClass("owl-carousel owl-theme");
+        $(".owl-carousel .card").css("margin-right", "15px"); // Adicione um espaçamento entre os itens, se desejar
+      }
+    });
+
+  </script>
+
+  {% block scripts %}
+
+  {% endblock %}
+</body>
 {% block rodape %}
-<footer class="footer">foot
+<footer class="footer">
   <!-- Conteúdo do rodapé aqui -->
+  <div class="social-icons">
+    <a href="https://github.com/Viero19G/Django_MySliderC" target="_blank" title="Repositório Git">
+      <i class="fab fa-github"></i>
+    </a>
+    <a href="https://www.linkedin.com/in/gabriel-viero-14503a211" target="_blank" title="LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://docs.djangoproject.com/en/4.2/" target="_blank" title="Documentação do Django">
+      <i class="fab fa-python"></i>
+    </a>
+  </div>
 </footer>
 {% endblock %}
 
-<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
-<script src="{% static 'js/jquery.mask.min.js' %}"></script>
-<script src="{% static 'popper.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/slick.min.js' %}"></script>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-
-
- <!-- DataTable -->
-<script src="{% static 'DataTables/datatables.min.js'%}"></script>
-<!-- Inclua o arquivo DataTables em português -->
-<script src="{% static 'DataTables/i18n/portugues.json' %}"></script>
-
-{% block scripts %}
-
-{% endblock %}
-</body>
 </html>

@@ -1,7 +1,7 @@
 import gspread
 import base64
-
-from django.shortcuts import render
+from braces.views import GroupRequiredMixin
+from django.shortcuts import redirect, render
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
@@ -14,8 +14,9 @@ from carrosselApp.models import *
 from integracao.google_sheets_utils import authenticate_google_sheets
 
 
-class SetorList(LoginRequiredMixin, ListView):
+class SetorList(GroupRequiredMixin, LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
+    group_required = ["administrador", "marketing"]
     model = Setor
     template_name = 'cadastros/listas/setor.html'
 
@@ -57,11 +58,9 @@ class GradeList(LoginRequiredMixin, ListView):
                 setor_do_usuario = Setor.objects.filter(membros=user).first()
 
                 if setor_do_usuario:
-                    # Se o usuário pertencer a um setor, liste as grades apenas desse setor
-                    queryset = Grade.objects.filter(setor=setor_do_usuario)
+                    queryset = Grade.objects.filter(usuariosEdit=user)
                 else:
-                    # Se o usuário não pertencer a nenhum setor, retorne um conjunto vazio
-                    queryset = Grade.objects.none()
+                    queryset = Grade.objects.filter(usuariosEdit=user)
             except Setor.DoesNotExist:
                 queryset = Grade.objects.none()
 
@@ -87,31 +86,57 @@ class GradeList(LoginRequiredMixin, ListView):
 
         # Verificar se o usuário é um editor de grade ou pertence a um setor onde a grade aparecerá
         if request.user in grade.usuariosEdit.all() or request.user.setor_set.filter(grades_editadas=grade).exists():
-            return render(request, 'ver/verCarrossel.html', {'grade': grade})
+            # Obter todos os conteúdos associados à grade
+            conteudos = grade.conteudo.all()
+
+            # Adicionar informações da planilha à lista de conteúdos, se for o caso
+            for conteudo in conteudos:
+                if conteudo.tipo == 'planilha':
+                    try:
+                        graficos_planilha = conteudo.planilha.graficoplanilha_set.all()
+         
+                        if not graficos_planilha.exists():
+                            # Adicione informações da planilha quando não há gráficos associados
+                            gc, token = authenticate_google_sheets()
+                            planilha_google = gc.open_by_key(conteudo.planilha.planilha_id)
+                            abas = planilha_google.worksheets()
+                            abas_info = []
+
+                            for aba in abas:
+                                data = aba.get_all_values()
+                                data = [[value for value in row] for row in data if any(value.strip() for value in row)]
+
+                                abas_info.append({
+                                    'aba': aba,
+                                    'data': data
+                                })
+
+                            conteudo.abas_info = abas_info
+
+                    except gspread.exceptions.APIError as e:
+                        return render(request, 'erro.html', {'mensagem': 'Erro ao acessar a planilha'})
+
+            return render(request, 'ver/verCarrossel.html', {'grade': grade, 'conteudos': conteudos})
         else:
             # O usuário não tem permissão para visualizar este carrossel
+            return redirect("inicio")
 
-            return render(request, 'falha')
 
-
-class ConteudoList(LoginRequiredMixin, ListView):
+class ConteudoList(GroupRequiredMixin, LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
+    # Lista dos nomes dos grupos permitidos
+    group_required = ["administrador", "marketing"]
     model = Conteudo
     template_name = 'cadastros/listas/conteudo.html'
 
     def get_queryset(self):
-        user = self.request.user
-
         # Verifique se o usuário pertence aos grupos 'administrador' ou 'marketing'
-        admin_group = Group.objects.get(name='administrador')
-        marketing_group = Group.objects.get(name='marketing')
-
-        if user.groups.filter(Q(name='administrador') | Q(name='marketing')).exists():
+        if self.request.user.groups.filter(name__in=self.group_required).exists():
             # Se o usuário pertencer a qualquer um dos grupos, mostre todo o conteúdo
             queryset = Conteudo.objects.all()
         else:
-            # Se não pertencer a nenhum desses grupos, liste apenas o conteúdo do próprio usuário
-            queryset = Conteudo.objects.filter(usuario=user)
+            # Se o usuário não pertencer aos grupos permitidos, retorne um queryset vazio
+            queryset = Conteudo.objects.none()
 
         return queryset
 
@@ -180,7 +205,7 @@ class PlanilhaList(LoginRequiredMixin, ListView):
             queryset = Planilha.objects.filter(usuario=user)
 
         return queryset
-    
+
     @login_required(login_url='login')
     def ver_planilha(request, pk):
         planilha = get_object_or_404(Planilha, pk=pk)
@@ -201,7 +226,8 @@ class PlanilhaList(LoginRequiredMixin, ListView):
             data = aba.get_all_values()
 
             # Remove as linhas e colunas que contêm apenas valores vazios
-            data = [[value for value in row] for row in data if any(value.strip() for value in row)]
+            data = [[value for value in row]
+                    for row in data if any(value.strip() for value in row)]
 
             # Adiciona informações da aba à lista abas_info
             abas_info.append({

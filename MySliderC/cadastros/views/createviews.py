@@ -12,11 +12,12 @@ from integracao.google_sheets_utils import authenticate_google_sheets
 from django.core.files.base import ContentFile
 import gdown
 from django.utils import timezone
+from braces.views import GroupRequiredMixin
 
-
-class SetorCreate(LoginRequiredMixin, CreateView):
+class SetorCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
     model = Setor
+    group_required = ["administrador", "marketing"] 
     fields = ['nome', 'membros']
     template_name = 'cadastros/create.html'
     success_url = reverse_lazy('listSetor')
@@ -43,8 +44,9 @@ class SetorCreate(LoginRequiredMixin, CreateView):
         return context
 
 
-class GradeCreate(LoginRequiredMixin, CreateView):
+class GradeCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
+    group_required = ["administrador", "marketing"] 
     model = Grade
     fields = ['title', 'sub_title', 'conteudo', 'usuariosEdit', 'setor']
     template_name = 'cadastros/create.html'
@@ -72,9 +74,10 @@ class GradeCreate(LoginRequiredMixin, CreateView):
         return context
 
 
-class ConteudoCreate(LoginRequiredMixin, CreateView):
+class ConteudoCreate(GroupRequiredMixin,LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
     model = Conteudo
+    group_required = ["administrador", "marketing"] 
     fields = ['tipo', 'video', 'imagem', 'planilha']
     template_name = 'cadastros/create.html'
     success_url = reverse_lazy('listConteudo')
@@ -90,13 +93,8 @@ class ConteudoCreate(LoginRequiredMixin, CreateView):
             form.instance.usuario = user
             return super().form_valid(form)
         else:
-            # Se o usuário não pertencer a nenhum desses grupos, verifique se a grade pertence ao mesmo setor
-            grade = form.instance.conteudo.first().grade_set.first()
-            if grade and grade.setor.membros.filter(id=user.id).exists():
-                return super().form_valid(form)
-            else:
-                # Se não pertencer ao mesmo setor, não permita criar o conteúdo
-                return self.handle_no_permission()
+           
+            return self.handle_no_permission()
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -116,74 +114,34 @@ class VideoCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         user = self.request.user
-
-        # Verifique se o usuário pertence aos grupos 'administrador' ou 'marketing'
-        admin_group = Group.objects.get(name='administrador')
-        marketing_group = Group.objects.get(name='marketing')
-
-        if user.groups.filter(Q(name='administrador') | Q(name='marketing')).exists():
-            # Se o usuário pertencer a qualquer um dos grupos, permita que ele crie o conteúdo
-            form.instance.usuario = user
-            # atenção url default do Django usa barras normais e para encontrar o arquivo no Windows
-            # é necessário usar barras invertidas
-            enviar = super().form_valid(form)
-            caminho = r'C:\Users\gabri\Documents\projetos_django\DjangoProjeto_II\MySliderC'
+        form.instance.usuario = user
+        # atenção url default do Django usa barras normais e para encontrar o arquivo no Windows
+        # é necessário usar barras invertidas
+        enviar = super().form_valid(form)
+        caminho = r'C:\Users\gabri\Documents\projetos_django\DjangoProjeto_II\MySliderC'
 
             # Obtenha o caminho correto do vídeo usando o método path do campo FileField
-            video_path = form.instance.video.path
-            print(f"Caminho do vídeo: {video_path}")
+        video_path = form.instance.video.path
+        print(f"Caminho do vídeo: {video_path}")
 
-            try:
-                with VideoFileClip(video_path) as clip:
-                    form.instance.tempo = int(clip.duration)
-            except Exception as e:
-                print(f"Erro ao obter a duração do vídeo: {e}")
+        try:
+             with VideoFileClip(video_path) as clip:
+                 form.instance.tempo = int(clip.duration)
+        except Exception as e:
+             print(f"Erro ao obter a duração do vídeo: {e}")
 
-            # Salvar o formulário novamente para adicionar o tempo
-            enviar = super().form_valid(form)
+         # Salvar o formulário novamente para adicionar o tempo
+        enviar = super().form_valid(form)
 
-            # Obter o objeto de vídeo após salvar novamente o formulário
-            # Obter o objeto de vídeo diretamente do formulário
-            video_obj = form.instance
+        # Obter o objeto de vídeo após salvar novamente o formulário
+        # Obter o objeto de vídeo diretamente do formulário
+        video_obj = form.instance
 
-            # Definir o tempo do objeto de vídeo com base no formulário
-            video_obj.tempo = form.instance.tempo
-            video_obj.save()
+        # Definir o tempo do objeto de vídeo com base no formulário
+        video_obj.tempo = form.instance.tempo
+        video_obj.save()
 
-            return enviar
-
-        else:
-            # Se o usuário não pertencer a nenhum desses grupos, verifique se a grade pertence ao mesmo setor
-            grade = form.instance.conteudo.first().grade_set.first()
-            if grade and grade.setor.membros.filter(id=user.id).exists():
-
-                enviar = super().form_valid(form)
-                caminho = r'C:\Users\gabri\Documents\projetos_django\DjangoProjeto_II\MySliderC'
-
-                # Obtenha o caminho correto do vídeo usando o método path do campo FileField
-                video_path = form.instance.video.path
-                print(f"Caminho do vídeo: {video_path}")
-
-                try:
-                    with VideoFileClip(video_path) as clip:
-                        form.instance.tempo = int(clip.duration)
-                except Exception as e:
-                    print(f"Erro ao obter a duração do vídeo: {e}")
-
-                # Salvar o formulário novamente para adicionar o tempo
-                enviar = super().form_valid(form)
-
-                # Obter o objeto de vídeo diretamente do formulário
-                video_obj = form.instance
-
-                # Definir o tempo do objeto de vídeo com base no formulário
-                video_obj.tempo = form.instance.tempo
-                video_obj.save()
-
-                return enviar
-            else:
-                # Se não pertencer ao mesmo setor, não permita criar o conteúdo
-                return self.handle_no_permission()
+        return enviar
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)

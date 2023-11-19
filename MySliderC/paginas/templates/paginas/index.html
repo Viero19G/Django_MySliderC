@@ -1,32 +1,295 @@
 {% extends 'paginas/modelo.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="pt-br">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% block titulo %}
-    <title>Pagina inicial
-    </title>
-    {% endblock %}
-    <link rel="stylesheet" href="{%static 'css/style.css' %}">
-</head>
-<body>
-    
-    {% block destaque %}
-    <h3>Pagina Inicial</h3>
-    
-    {% endblock %}
+{% load custom_filters %}
+
+{% block titulo %}
+<title>Pagina inicial
+</title>
+{% endblock %}
+
+{% block imports %}
+<link rel="stylesheet" href="{%static 'css/style.css' %}">
+{% endblock %}
+
+{% block destaque %}
+{% endblock %}
 
 
-    {% block conteudo %}
-    {% if user.perfil.nome_completo %}
-    Bem Vindo ao sistema {{ user.perfil.nome_completo}}.
-    {% else %}
-    Você precisa completar seu cadastro. Acesse os <a href="{% url 'upPerfil'%}">meus dados</a> para atualizar.
+{% block conteudo %}
+{% if perfil %}
+<h2>Perfil de {{ perfil.usuario.username }}</h2>
+<p>Nome Completo: {{ perfil.nome_completo }}</p>
+<p>CPF: {{ perfil.cpf }}</p>
+<p>Telefone: {{ perfil.telefone }}</p>
+<div class="bg-light shadow p-3 mb-5">
+    <h3>Grades onde é Editor:</h3>
+    <div class="card-group owl-carousel">
+        {%for grade in grades_editadas %}
+        <div class="card">
+            {% if grade.conteudo.exists %}
+            <div id="carouselExampleInterval{{ forloop.counter }}" class="carousel slide text-center shadow"
+                data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for conteudo in grade.conteudo.all %}
+                    {% if conteudo.tipo == 'video' and conteudo.video.video.url|slice:'-4:' == '.mp4' %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}"
+                        data-bs-interval="{{ conteudo.video.tempo|multiply:1000 }}">
+                        <video class="slide-video" controls style="height: 100%; width: 100%; object-fit: contain;">
+                            <source src="{{ conteudo.video.video.url }}" type="video/mp4">
+                            Seu navegador não suporta o formato de Vídeo.
+                        </video>
+                    </div>
+                    {% elif conteudo.tipo == 'imagem' %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}"
+                        data-bs-interval="{{ conteudo.imagem.tempo|multiply:1000  }}">
+                        <img src="{{ conteudo.imagem.image.url }}"
+                            style="height: 100%; width: 100%; object-fit: contain;">
+                    </div>
+                    {% elif conteudo.tipo == 'planilha' %}
+                    {% with graficos_planilha=conteudo.planilha.graficoplanilha_set.all %}
+                    {% if graficos_planilha.exists %}
+                    {% for grafico_planilha in graficos_planilha %}
+                    {# Para cada gráfico associado à planilha, buscar o objeto Grafico usando a pk #}
+                    {% with grafico=grafico_planilha.grafico %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}"
+                        data-bs-interval="{{ conteudo.planilha.tempo|multiply:1000  }}">
+                        <img src="{{ grafico.image.url }}" style="height: 25vh; width: 100%; object-fit: contain;">
+                    </div>
+                    {% endwith %}
+                    {% endfor %}
+                    {% else %}
+                    {# Se não houver gráficos associados, mostrar um parágrafo indicando que não há gráficos #}
+                    <p>Não há gráficos associados a esta planilha.</p>
+                    {% endif %}
+                    {% endwith %}
+                    {% endif %}
+                    {% endfor %}
+                </div>
+
+            </div>
+            {% else %}
+            <div class="text-center mt-3">
+                <p>Grade vazia</p>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h4 class="card-title">{{ grade.title }}</h4>
+                <h6 class="card-title">{{ grade.sub_title }}</h6>
+                <p class="card-text">
+                    Pertence a:
+                    {% for setor in grade.setor.all %}
+                    {{ setor.nome }}
+                    {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+                <p class="card-text">
+                    Usuários que podem editar:
+                    {% for usuarios in grade.usuariosEdit.all %}
+                    {{ usuarios.username }}
+                    {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+                <a href="{% url 'verCarrossel' grade.pk %}" class="btn btn-info btn-sm" title="Ver Detalhes">
+                    <i class="fas fa-eye"></i> <!-- Ícone de olho -->
+                </a>
+                <a href="{% url 'upGrade' grade.pk %}" class="btn btn-warning btn-sm" title="Editar">
+                    <i class="fas fa-pencil-alt"></i> <!-- Ícone de lápis -->
+                </a>
+                <a href="{% url 'delGrade' grade.pk %}" class="btn btn-danger btn-sm" title="Excluir">
+                    <i class="fas fa-trash"></i> <!-- Ícone de lixeira -->
+                </a>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="bg-light shadow p-3 mb-5">
+    <h3>Setores Do Usuario:</h3>
+    <div class="setores-container">
+        <div class="card-group owl-carousel">
+            {% for setor in setores_pertencentes %}
+            <div class="card">
+                <div class="card-body">
+                    <h3>{{ setor.nome }}</h3>
+                    <p>Criado por: {{ setor.usuario.username }}</p>
+                    <p>Membros:</p>
+                    <p class="card-text">
+                        {% for membro in setor.membros.all %}
+                        {{ membro.username }}
+                        {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+
+                    <a href="{% url 'upSetor' setor.pk %}" class="btn btn-warning btn-sm" title="editar">
+                        <i class="fas fa-pencil-alt"></i> <!-- Ícone de lápis -->
+                    </a>
+                    <a href="{% url 'delSetor' setor.pk %}" class="btn btn-danger btn-sm" title="excluir">
+                        <i class="fas fa-trash"></i> <!-- Ícone de lixeira -->
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+{% else %}
+<div id="universo" class="bg-gradient-secondary shadow p-3 mb-5">
+    <p>Bem-vindo, {{ request.user.username }}!</p>
+    {% if request.user.is_superuser %}
+    <p>Você é um superusuário.</p>
     {% endif %}
-    {% endblock %}
+</div>
+<div class="bg-light shadow p-3 mb-5">
+    <div class="d-flex justify-content-between align-items-center">
+        <h5>Possui Controle Total Sobre os Usuarios:</h5>
+        <a href="{% url 'registrar' %}" class="btn btn-outline-info  mb-2"><i class="fas fa-user-plus"></i> ++</a>
 
+    </div>
+    <div class="setores-container">
+        <div class="card-group owl-carousel">
+            {% for usuario in usuarios %}
+            <div class="card">
+                <div class="card-body">
+                    <h3>{{ usuario.username }}</h3>
+                    <p>Email:</p>
+                    <p class="card-text">
+                        {{usuario.email}}
+                    </p>
 
-</body>
-</html>
+                    <a href="{% url 'user_edit' user.id %}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-pencil-alt"></i> <!-- Ícone de lápis --></a>
+                    <a href="{% url 'user_delete' user.id %}" class="btn btn-danger btn-sm"
+                        onclick="return confirm('Tem certeza que deseja excluir {{ user.username }}?')"><i
+                            class="fas fa-trash"></i></a>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+<div class="bg-light shadow p-3 mb-5">
+    <div class="d-flex justify-content-between align-items-center">
+        <h5>Possui Controle Total Sobre os Setores:</h5>
+        <a href="{% url 'cadastrar-setor' %}" class="btn btn-outline-info  mb-2">SETOR ++</a>
+    </div>
+    <div class="setores-container">
+        <div class="card-group owl-carousel">
+            {% for setor in setores_pertencentes %}
+            <div class="card">
+                <div class="card-body">
+                    <h3>{{ setor.nome }}</h3>
+                    <p>Criado por: {{ setor.usuario.username }}</p>
+                    <p>Membros:</p>
+                    <p class="card-text">
+                        {% for membro in setor.membros.all %}
+                        {{ membro.username }}
+                        {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+
+                    <a href="{% url 'upSetor' setor.pk %}" class="btn btn-warning btn-sm" title="editar">
+                        <i class="fas fa-pencil-alt"></i> <!-- Ícone de lápis -->
+                    </a>
+                    <a href="{% url 'delSetor' setor.pk %}" class="btn btn-danger btn-sm" title="excluir">
+                        <i class="fas fa-trash"></i> <!-- Ícone de lixeira -->
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+<div class="bg-light shadow p-3 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center">
+        <h5>Possui Controle Total Sobre as Grades:</h5>
+        <a href="{% url 'cadastrar-grade' %}" class="btn btn-outline-info mb-2">GRADE ++</a>
+    </div>
+    <div class="card-group owl-carousel">
+        {%for grade in grades_criadas %}
+        <div class="card">
+            {% if grade.conteudo.exists %}
+            <div id="carouselExampleInterval{{ forloop.counter }}" class="carousel slide text-center shadow"
+                data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for conteudo in grade.conteudo.all %}
+                    {% if conteudo.tipo == 'video' and conteudo.video.video.url|slice:'-4:' == '.mp4' %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}"
+                        data-bs-interval="{{ conteudo.video.tempo|multiply:1000 }}">
+                        <video class="slide-video" controls style="height: 100%; width: 100%; object-fit: contain;">
+                            <source src="{{ conteudo.video.video.url }}" type="video/mp4">
+                            Seu navegador não suporta o formato de Vídeo.
+                        </video>
+                    </div>
+                    {% elif conteudo.tipo == 'imagem' %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}"
+                        data-bs-interval="{{ conteudo.imagem.tempo|multiply:1000  }}">
+                        <img src="{{ conteudo.imagem.image.url }}"
+                            style="height: 100%; width: 100%; object-fit: contain;">
+                    </div>
+                    {% elif conteudo.tipo == 'planilha' %}
+                    {% with graficos_planilha=conteudo.planilha.graficoplanilha_set.all %}
+                    {% if graficos_planilha.exists %}
+                    {% for grafico_planilha in graficos_planilha %}
+                    {# Para cada gráfico associado à planilha, buscar o objeto Grafico usando a pk #}
+                    {% with grafico=grafico_planilha.grafico %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}"
+                        data-bs-interval="{{ conteudo.planilha.tempo|multiply:1000  }}">
+                        <img src="{{ grafico.image.url }}" style="height: 25vh; width: 100%; object-fit: contain;">
+                    </div>
+                    {% endwith %}
+                    {% endfor %}
+                    {% else %}
+                    {# Se não houver gráficos associados, mostrar um parágrafo indicando que não há gráficos #}
+                    <p>Não há gráficos associados a esta planilha.</p>
+                    {% endif %}
+                    {% endwith %}
+                    {% endif %}
+                    {% endfor %}
+                </div>
+
+            </div>
+            {% else %}
+            <div class="text-center mt-3">
+                <p>Grade vazia</p>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h4 class="card-title">{{ grade.title }}</h4>
+                <h6 class="card-title">{{ grade.sub_title }}</h6>
+                <p class="card-text">
+                    Pertence a:
+                    {% for setor in grade.setor.all %}
+                    {{ setor.nome }}
+                    {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+                <p class="card-text">
+                    Usuários que podem editar:
+                    {% for usuarios in grade.usuariosEdit.all %}
+                    {{ usuarios.username }}
+                    {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+                <a href="{% url 'verCarrossel' grade.pk %}" class="btn btn-info btn-sm" title="Ver Detalhes">
+                    <i class="fas fa-eye"></i> <!-- Ícone de olho -->
+                </a>
+                <a href="{% url 'upGrade' grade.pk %}" class="btn btn-warning btn-sm" title="Editar">
+                    <i class="fas fa-pencil-alt"></i> <!-- Ícone de lápis -->
+                </a>
+                <a href="{% url 'delGrade' grade.pk %}" class="btn btn-danger btn-sm" title="Excluir">
+                    <i class="fas fa-trash"></i> <!-- Ícone de lixeira -->
+                </a>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
